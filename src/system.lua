@@ -127,6 +127,42 @@ function handleTextCommandInput(text)
     system.print("SYSTEM: I Can't... " .. text)
 end
 
+function getCompleteMessage()
+  local sorted = getKeysSortedByValue(messageParts, function(a, b) return tonumber(a["index"]) < tonumber(b["index"]) end )    
+  message = ""
+  for _, key in ipairs(sorted) do
+      message = message .. messageParts[key]["content"]
+  end
+  return message
+end
+
+function split(str, maxLength)
+  local lines = {}  
+  local partLength = math.ceil(str:len() / maxLength)
+  local len = partLength
+  local startNum = 1
+  local endNum = maxLength
+  while partLength > 0 do
+  table.insert(lines, string.sub(str, startNum, endNum))
+  startNum = startNum + maxLength
+  endNum = endNum + maxLength
+  partLength = partLength - 1
+  end 
+  return { lines = lines, length = len }
+end
+
+function splitBroadcast(action, channel, message)
+  local index = 1
+  local parts = split(message, 200)
+  for _, line in ipairs(parts["lines"]) do
+     local jsonStr = json.encode({ i = index, len = parts["length"], action = action, content = line})
+     local send = string.gsub(jsonStr, '\\"', '|')
+     send = string.gsub(send, '"', '\\"')
+     emitter.send(channel, send)
+     index = index + 1
+  end    
+end
+
 function getKeysSortedByValue(tbl, sortFunction)
     local keys = {}
     for key in pairs(tbl) do
@@ -286,8 +322,7 @@ end
 
         -- Emit the track data here, it allows a reset of the board to refetch the data on vehicle
         local trackJSON = json.encode(activeTrack)
-        local send = string.gsub(trackJSON, '"', '\\"')
-        emitter.send(data["racer"] .. "-registered", send)          
+        splitBroadcast("save-track", data["racer"] .. "-splitmsg", trackJSON)
 
     end
 
