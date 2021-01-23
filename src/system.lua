@@ -158,7 +158,7 @@ end
 
 function splitBroadcast(action, channel, message)
     local index = 1
-    local parts = split(message, 200)
+    local parts = split(message, 350)
     for _, line in ipairs(parts["lines"]) do
         local jsonStr = json.encode({i = index, len = parts["length"], action = action, content = line})
         local send = string.gsub(jsonStr, '\\"', "|")
