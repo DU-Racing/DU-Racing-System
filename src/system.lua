@@ -104,11 +104,13 @@ function handleTextCommandInput(text)
     -- Set track
     if text:find("set track ") then
         trackKey = string.gsub(text, "set track ", "")
-        -- TODO CHECK THIS TRACK EXISTS
-        raceDB.setStringValue("activeTrackID", trackKey)
-        system.print("Track key has been set")
-        buildRaceStatScreen()
-        return createRace(raceID)
+        if trackDB.hasKey(trackKey) == 1 then
+            raceDB.setStringValue("activeTrackID", trackKey)
+            system.print("Track key has been set")
+            buildRaceStatScreen()
+            return createRace(raceID)
+        end
+        return system.print("Track key not found: " .. trackKey)
     end
 
     -- list saved tracks
@@ -194,6 +196,9 @@ end
 function createRace(raceID)
     if trackKey == "" or trackKey == nil then
         return system.print("ERROR: No track set, use the 'set track' command")
+    end
+    if raceID == "" or raceID == nil then
+        return system.print("ERROR: No race key, use the 'set key' command")
     end
     if raceDB.hasKey(raceID) == 0 then
         local race = {raceID = raceID, trackKey = trackKey, status = "pending", racers = {}}
