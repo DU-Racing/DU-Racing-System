@@ -8,6 +8,8 @@ raceID = raceDB.getStringValue("activeRaceID")
 trackKey = raceDB.getStringValue("activeTrackID")
 activeTrack = nil
 trackName = "" -- Set from the databank when looking up track key
+messageParts = {}
+messageQueue = {}
 
 -- Do not adjust version
 version = "1.0"
@@ -128,6 +130,33 @@ function handleTextCommandInput(text)
     system.print("SYSTEM: I Can't... " .. text)
 end
 
+function consumeQueue()
+    local sortedMessages = getKeysSortedByValue(
+        messageQueue,
+        function(a, b)
+            return tonumber(tonumber(a["time"]) < tonumber(b["time"]))
+        end
+    )
+    local limit = 1
+    local count = 0
+    for _, key in ipairs(sortedMessages) do
+        if count < limit then 
+            emitter.send(messageQueue[key]["channel"], messageQueue[key]["message"])
+            unqueueMessage(key)
+            break
+        end
+        count = count + 1
+    end        
+end
+
+function queueMessage(channel, message)
+    table.insert(messageQueue, { channel = channel, message = message, time = system.getTime()})
+end
+
+function unqueueMessage(key)
+    table.remove(messageQueue, key)
+end
+
 function getCompleteMessage()
     local sorted =
         getKeysSortedByValue(
@@ -165,7 +194,7 @@ function splitBroadcast(action, channel, message)
         local jsonStr = json.encode({i = index, len = parts["length"], action = action, content = line})
         local send = string.gsub(jsonStr, '\\"', "|")
         send = string.gsub(send, '"', '\\"')
-        emitter.send(channel, send)
+        queueMessage(channel, send)
         index = index + 1
     end
 end
@@ -398,3 +427,9 @@ else
 end
 
 buildRaceStatScreen()
+
+-- Message queue consumer
+unit.setTimer("consumeQueue", 1)
+
+
+
