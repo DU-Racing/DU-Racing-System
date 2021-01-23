@@ -620,7 +620,7 @@ function initOverlay()
       left    : 0;
       bottom  : 0;
       height  : 1px;
-      width   : calc(15vw - 30px);
+      width   : 15vw;
       border-bottom: 1px solid rgb(2, 157, 187);
     }
     .mainArea .info:after {
