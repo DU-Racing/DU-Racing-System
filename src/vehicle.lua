@@ -220,7 +220,7 @@ end
 function nextWaypoint()
     local now = system.getTime()
     -- Queries the databank and set the next waypoint
-    print("Waypoint #" .. currentWaypointIndex .. " complete.", true)
+    print("Waypoint #" .. currentWaypointIndex .. " complete", true)
     incrementWaypoint()
     nextPoint = waypoints[currentWaypointIndex]
     -- no more waypoints?
@@ -248,7 +248,7 @@ function nextWaypoint()
 end
 function decrementLaps()
     remainingLaps = remainingLaps - 1
-    print("Lap complete.", true)
+    print("Lap complete", true)
 end
 function incrementWaypoint()
     currentWaypointIndex = currentWaypointIndex + 1
@@ -766,7 +766,7 @@ function enterTestMode()
     loadTrack(testTrackKey)
 
     print("Type 'start' in lua console or hit {ALT+1} to start the test race", false)
-    gData.mainMessage = "Press ALT+1 to begin. "
+    gData.mainMessage = "Press ALT+1 to begin"
     toast("Test mode activated")
 end
 
