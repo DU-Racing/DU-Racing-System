@@ -1,10 +1,10 @@
 -- Params
-raceID = "test1" --export: sent from the central system to set the current race ID
+raceID = "dutest" --export: sent from the central system to set the current race ID
 teamName = "DU Racing" --export: The name of the team racing for
 colorRed = 0 --export: red color 0-255
 colorGreen = 0 --export: green color 0-255
 colorBlue = 255 --export: blue color 0-255
-testRace = true --export: if set to true this will not emit times but allow the course to be run
+testRace = false --export: if set to true this will not emit times but allow the course to be run
 testTrackKey = "Hover Kart Track" --export: Active track key, only used for test races
 --ad = "assets.prod.novaquark.com/100694/37f71083-7b2a-42cc-8728-44119d908ef2.png" --export: Sponsor for this race. default is DU Racing logo
 --map = "assets.prod.novaquark.com/74927/a28ec69c-1a26-4d85-b579-5acedc3f69c2.png" --export: Image for background on map
@@ -246,6 +246,9 @@ function nextWaypoint()
         nextPoint = waypoints[1]
     end
     currentWaypoint = vec3(nextPoint[1], nextPoint[2], nextPoint[3])
+    -- debugging - had a couple of issues with this not working in a race so logging it here to catch it next time
+    system.print(xyzPosition(currentWaypoint.x, currentWaypoint.y, currentWaypoint.z))
+
     system.setWaypoint(xyzPosition(currentWaypoint.x, currentWaypoint.y, currentWaypoint.z))
 end
 function decrementLaps()
@@ -424,9 +427,14 @@ end
 -- save broadcasted track
 function saveBroadcastedTrack(str)
     local track = json.decode(str)
+    if track == nil or type(track) ~= "table" then
+      print("Error: Restart board to register", true)
+      return false
+    end
     db.setStringValue(track["name"], str)
     loadTrack(track["name"])
     print(track["name"] .. " has been loaded")
+    return true
 end
 
 -- load track
@@ -678,7 +686,7 @@ end
 function addStaticWidget(parentPanel, value, label, unit)
     local tempWidget = system.createWidget(parentPanel, "value")
     local tempData =
-        system.createData('{"value": "' .. value .. '","label":"' .. label .. '", "unit": "' .. unit .. '"}')
+    system.createData('{"value": "' .. value .. '","label":"' .. label .. '", "unit": "' .. unit .. '"}')
     system.addDataToWidget(tempData, tempWidget)
     return tempData
 end
@@ -767,6 +775,12 @@ function main()
     end
 end
 
+function registerConfirm()
+    gState = "ready"
+    gData.mainMessage = ""
+    toast("Awaiting race start")
+end
+
 function enterTestMode()
     print("-==:: DU Racing Test Mode ::==-")
     -- Check they have an active track
@@ -808,3 +822,4 @@ function print(msg, doToast)
 end
 
 main()
+

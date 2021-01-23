@@ -14,6 +14,12 @@ if channel == uid .. "-splitmsg" or channel == "dur-splitmsg" then
         if part["action"] == "save-track" then
             saveBroadcastedTrack(fullMessage)
         end
+        if part["action"] == "register-save-track" then
+            local registered = saveBroadcastedTrack(fullMessage)
+            if registered then
+                registerConfirm()
+            end
+        end
     end
 end
 

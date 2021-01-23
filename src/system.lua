@@ -328,7 +328,7 @@ function registerRacer(registerJSON)
 
     -- Emit the track data here, it allows a reset of the board to refetch the data on vehicle
     local trackJSON = json.encode(activeTrack)
-    splitBroadcast("save-track", data["racer"] .. "-splitmsg", trackJSON)
+    splitBroadcast("register-save-track", data["racer"] .. "-splitmsg", trackJSON)
 end
 
 -- Race Stats Screen
