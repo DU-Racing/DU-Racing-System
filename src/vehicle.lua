@@ -376,7 +376,7 @@ function emitFinalTimes()
     -- TODO: this is an important notification, it should be sent on a loop until a confirmation message is returned
     local json = json.encode(times)
     local send = string.gsub(json, '"', '\\"')
-    emitter.send("fdu-finish", send)
+    emitter.send(raceID .. "-finish", send)
 end
 
 -- Race Organiser Functions
@@ -747,7 +747,7 @@ function main()
         -- emit racer online if we have a race ID
         if raceID ~= "" then
             local startData = {raceID = raceID, racer = unit.getMasterPlayerId()}
-            emitter.send("fdu-register", string.gsub(json.encode(startData), '"', '\\"'))
+            emitter.send(raceID .. "-register", string.gsub(json.encode(startData), '"', '\\"'))
         end
         gState = "awaiting"
         gData.mainMessage = "REGISTERING"
