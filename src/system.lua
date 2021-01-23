@@ -10,6 +10,7 @@ activeTrack = nil
 trackName = "" -- Set from the databank when looking up track key
 messageParts = {}
 messageQueue = {}
+consumerStarted = false
 
 -- Do not adjust version
 version = "1.0"
@@ -137,24 +138,29 @@ function consumeQueue()
             return tonumber(tonumber(a["time"]) < tonumber(b["time"]))
         end
     )
-    local limit = 1
-    local count = 0
     for _, key in ipairs(sortedMessages) do
-        if count < limit then 
-            emitter.send(messageQueue[key]["channel"], messageQueue[key]["message"])
-            unqueueMessage(key)
-            break
-        end
-        count = count + 1
+        emitter.send(messageQueue[key]["channel"], messageQueue[key]["message"])
+        unqueueMessage(key)
+        break
     end        
 end
 
 function queueMessage(channel, message)
+    if consumerStarted == false then
+        -- Message queue consumer
+        unit.setTimer("consumeQueue", 1)
+    end
     table.insert(messageQueue, { channel = channel, message = message, time = system.getTime()})
 end
 
 function unqueueMessage(key)
     table.remove(messageQueue, key)
+    local count = 0
+    for _ in pairs(messageQueue) do count = count + 1 end
+    if count == 0 then 
+        unit.stopTimer("consumeQueue")
+        consumerStarted = false
+    end 
 end
 
 function getCompleteMessage()
@@ -427,9 +433,6 @@ else
 end
 
 buildRaceStatScreen()
-
--- Message queue consumer
-unit.setTimer("consumeQueue", 1)
 
 
 
