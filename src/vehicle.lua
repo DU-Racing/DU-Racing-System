@@ -1,6 +1,7 @@
 -- Params
 raceID = "test1" --export: sent from the central system to set the current race ID
-
+teamName = "DU Racing" -- export: The name of the team racing for
+teamColor = "0,0,255" -- export: r,g,b value for the color
 testRace = true --export: if set to true this will not emit times but allow the course to be run
 testTrackKey = "Hover Kart Track" --export: Active track key, only used for test races
 ad = "assets.prod.novaquark.com/100694/37f71083-7b2a-42cc-8728-44119d908ef2.png" --export: Sponsor for this race. default is DU Racing logo
@@ -481,22 +482,25 @@ function updateOverlay()
     html =
         html ..
         '<div class="mainArea">' ..
-            '<div class="logo">' ..
-                duRacingLogo ..
-                    "</div>" ..
-                        '<div class="info">' ..
-                            '<span class="label">Track Name: </span><span class="value">' ..
-                                trackName ..
-                                    "</span>" ..
-                                        "</div>" ..
-                                            '<div class="info">' ..
-                                                '<span class="label">Track Name: </span><span class="value">' ..
-                                                    trackName ..
-                                                        "</span>" ..
-                                                            "</div>" ..
-                                                                '<div class="info">' ..
-                                                                    '<span class="label">Track Name: </span><span class="value">' ..
-                                                                        trackName .. "</span>" .. "</div>" .. "</div>"
+        '<div class="logo">' ..
+        duRacingLogo ..
+        "</div>" ..
+        '<div class="info">' ..
+        '<span class="label">Track Name: </span><span class="value">' ..
+        trackName ..
+        "</span>" ..
+        "</div>" ..
+        '<div class="info">' ..
+        '<span class="label">Team Name: </span><span class="value">' ..
+        teamName .. 
+        '&nbsp;&nbsp;<span style="magrin-left: 10px;display: inline-block; width: 10px; height: 10px; background: rgb(' .. teamColor .. ');"></span>' ..
+        "</span>" ..
+        "</div>" ..
+        '<div class="info">' ..
+        '<span class="label">Track Name: </span><span class="value">' ..
+        trackName .. "</span>" .. 
+        "</div>" .. 
+        "</div>"
 
     -- disabled due to flicker
     --html = html ..
@@ -535,24 +539,24 @@ function initOverlay()
     deltaTimeRef = addStaticWidget(raceInfoPanel, "--:--:--.---", "Your Best Lap", "")
 
     --section: Race Info
-    infoTitleWidget = system.createWidget(raceInfoPanel, "title")
-    infoTitleData = system.createData('{"text":"Race Info"}')
-    system.addDataToWidget(infoTitleData, infoTitleWidget)
-
-    addStaticWidget(raceInfoPanel, "Mos Espa Circuit", "Track Name", "")
-    addStaticWidget(raceInfoPanel, "XS-X-X", "Class", "")
-    addStaticWidget(raceInfoPanel, "0:00:00.000", "Track Record", "")
-    addStaticWidget(raceInfoPanel, "testKey1782", "Race Key", "")
-    addStaticWidget(raceInfoPanel, "37", "Length", "km")
-    addStaticWidget(raceInfoPanel, "Atmos", "Type", "")
+    --infoTitleWidget = system.createWidget(raceInfoPanel, "title")
+    --infoTitleData = system.createData('{"text":"Race Info"}')
+    --system.addDataToWidget(infoTitleData, infoTitleWidget)
+--
+    --addStaticWidget(raceInfoPanel, "Mos Espa Circuit", "Track Name", "")
+    --addStaticWidget(raceInfoPanel, "XS-X-X", "Class", "")
+    --addStaticWidget(raceInfoPanel, "0:00:00.000", "Track Record", "")
+    --addStaticWidget(raceInfoPanel, "testKey1782", "Race Key", "")
+    --addStaticWidget(raceInfoPanel, "37", "Length", "km")
+    --addStaticWidget(raceInfoPanel, "Atmos", "Type", "")
 
     --section: Driver Profile
-    racerTitleWidget = system.createWidget(raceInfoPanel, "title")
-    racerTitleData = system.createData('{"text":"Driver Profile / Config"}')
-    system.addDataToWidget(racerTitleData, racerTitleWidget)
+    --racerTitleWidget = system.createWidget(raceInfoPanel, "title")
+    --racerTitleData = system.createData('{"text":"Driver Profile / Config"}')
+    --system.addDataToWidget(racerTitleData, racerTitleWidget)
 
-    addStaticWidget(raceInfoPanel, "Obsidian", "Team Name", "")
-    addStaticWidget(raceInfoPanel, "Red", "Color", "")
+    --addStaticWidget(raceInfoPanel, "Obsidian", "Team Name", "")
+    --addStaticWidget(raceInfoPanel, "Red", "Color", "")
 
     --set up styles
     styles =
@@ -566,9 +570,9 @@ function initOverlay()
       text-transform: uppercase;
     }
     .mainMessage{
-      font-size: 8vh;
+      font-size: 7vh;
       position: absolute; 
-      top: 40vh;
+      top: 15vh;
       left: 0;
       text-align: center;
       width: 100vw;
@@ -725,6 +729,7 @@ end
 function main()
     setDefaults()
     if organiserMode then
+        trackName = "TBC"
         newRaceInfoPanel = system.createWidgetPanel("New Race")
         gState = "organiser"
         print("-==:: DU Racing Organiser Mode ::==-", false)
