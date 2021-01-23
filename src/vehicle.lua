@@ -1,11 +1,13 @@
 -- Params
 raceID = "test1" --export: sent from the central system to set the current race ID
-teamName = "DU Racing" -- export: The name of the team racing for
-teamColor = "0,0,255" -- export: r,g,b value for the color
+teamName = "DU Racing" --export: The name of the team racing for
+colorRed = 0 --export: red color 0-255
+colorGreen = 0 --export: green color 0-255
+colorBlue = 255 --export: blue color 0-255
 testRace = true --export: if set to true this will not emit times but allow the course to be run
 testTrackKey = "Hover Kart Track" --export: Active track key, only used for test races
-ad = "assets.prod.novaquark.com/100694/37f71083-7b2a-42cc-8728-44119d908ef2.png" --export: Sponsor for this race. default is DU Racing logo
-map = "assets.prod.novaquark.com/74927/a28ec69c-1a26-4d85-b579-5acedc3f69c2.png" --export: Image for background on map
+--ad = "assets.prod.novaquark.com/100694/37f71083-7b2a-42cc-8728-44119d908ef2.png" --export: Sponsor for this race. default is DU Racing logo
+--map = "assets.prod.novaquark.com/74927/a28ec69c-1a26-4d85-b579-5acedc3f69c2.png" --export: Image for background on map
 
 -- Organiser Params
 -- Current Track Key (the current race key to use for saving waypoints)
@@ -158,16 +160,6 @@ function split(str, maxLength)
         partLength = partLength - 1
     end
     return {lines = lines, length = len}
-end
-
-function splitByDelimiter(s, sep)
-    local fields = {}
-    
-    local sep = sep or " "
-    local pattern = string.format("([^%s]+)", sep)
-    string.gsub(s, pattern, function(c) fields[#fields + 1] = c end)
-    
-    return fields
 end
 
 function splitBroadcast(action, channel, message)
@@ -503,7 +495,7 @@ function updateOverlay()
         '<div class="info">' ..
         '<span class="label">Team Name: </span><span class="value">' ..
         teamName .. 
-        '&nbsp;&nbsp;<span style="magrin-left: 10px;display: inline-block; width: 10px; height: 10px; background: rgb(' .. teamColor .. ');"></span>' ..
+        '&nbsp;&nbsp;<span style="magrin-left: 10px;display: inline-block; width: 10px; height: 10px; background: rgb(' .. colorRed .. ', ' .. colorGreen .. ', ' .. colorBlue .. ');"></span>' ..
         "</span>" ..
         "</div>" ..
         '<div class="info">' ..
@@ -735,15 +727,14 @@ end
 
 function setDefaults()
     -- Lights (if set)
-    local colors = splitByDelimiter(teamColor, ",")
     if light1 ~= nil then 
-        light1.setRGBColor(colors[1],colors[2],colors[3])
+        light1.setRGBColor(colorRed, colorGreen, colorBlue)
     end
     if light2 ~= nil then 
-       light2.setRGBColor(colors[1],colors[2],colors[3])
+       light2.setRGBColor(colorRed, colorGreen, colorBlue)
     end
     if light3 ~= nil then 
-       light3.setRGBColor(colors[1],colors[2],colors[3])
+       light3.setRGBColor(colorRed, colorGreen, colorBlue)
     end
 end
 
