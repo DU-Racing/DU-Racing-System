@@ -160,6 +160,16 @@ function split(str, maxLength)
     return {lines = lines, length = len}
 end
 
+function splitByDelimiter(s, sep)
+    local fields = {}
+    
+    local sep = sep or " "
+    local pattern = string.format("([^%s]+)", sep)
+    string.gsub(s, pattern, function(c) fields[#fields + 1] = c end)
+    
+    return fields
+end
+
 function splitBroadcast(action, channel, message)
     local index = 1
     local parts = split(message, 200)
@@ -724,6 +734,17 @@ if screen ~= nil then
 end
 
 function setDefaults()
+    -- Lights (if set)
+    local colors = splitByDelimiter(teamColor, ",")
+    if light1 ~= nil then 
+        light1.setRGBColor(colors[1],colors[2],colors[3])
+    end
+    if light2 ~= nil then 
+       light2.setRGBColor(colors[1],colors[2],colors[3])
+    end
+    if light3 ~= nil then 
+       light3.setRGBColor(colors[1],colors[2],colors[3])
+    end
 end
 
 function main()
