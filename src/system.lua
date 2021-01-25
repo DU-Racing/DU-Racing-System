@@ -149,6 +149,7 @@ function queueMessage(channel, message)
     if consumerStarted == false then
         -- Message queue consumer
         unit.setTimer("consumeQueue", 1)
+        consumerStarted = true
     end
     table.insert(messageQueue, { channel = channel, message = message, time = system.getTime()})
 end
