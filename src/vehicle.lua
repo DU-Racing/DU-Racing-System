@@ -287,6 +287,7 @@ function startRace()
         print("GO!", true)
         raceStarted = true
         -- set first waypoint
+        currentWaypointIndex = 1
         currentWaypoint = vec3(waypoints[1][1], waypoints[1][2], waypoints[1][3])
         system.setWaypoint(xyzPosition(currentWaypoint.x, currentWaypoint.y, currentWaypoint.z))
 
@@ -335,8 +336,8 @@ function endRace()
     print("Final time: " .. formatTime(endTime - startTime), false)
 
     -- Emit this data
-    if testRace == false then
-        emitFinalTimes()
+    if not testRace then
+        sendFinalTimes()
     end
 end
 
@@ -421,20 +422,32 @@ function getTrackWaypoints(trackKey)
 end
 
 -- Emit final times
-function emitFinalTimes()
+function sendFinalTimes()
     -- JSON encode the logged times and emit them to the stadium
     local times = {
-        lapTime = round(endTime - startTime),
+        finalTime = round(endTime - startTime),
+        lapTimes = lapTimes,
         raceID = raceID,
         racer = unit.getMasterPlayerId()
     }
 
-    -- TODO: Save these locally for inspection if needed
+    -- Save these locally for inspection if needed
+    local jsonStr = json.encode(times)
+    db.setStringValue('last-race-data', jsonStr)
+    -- This is an important notification, it should be sent on a loop until a confirmation message is returned
+    unit.setTimer('emitDataTillConfirmation', 3)
 
-    -- TODO: this is an important notification, it should be sent on a loop until a confirmation message is returned
-    local json = json.encode(times)
-    local send = string.gsub(json, '"', '\\"')
-    emitter.send(raceID .. "-finish", send)
+end
+
+function emitDataTillConfirmation()
+    local jsonStr = db.getStringValue('last-race-data')
+    if jsonStr ~= nil then
+        local send = string.gsub(jsonStr, '"', '\\"')
+        system.print('trying send: ' .. send)
+        emitter.send(raceID .. "-finish", send)
+    else
+        system.print('json data is nil')
+    end
 end
 
 -- Race Organiser Functions
@@ -876,3 +889,4 @@ end
 
 main()
 
+sendFinalTimes()
