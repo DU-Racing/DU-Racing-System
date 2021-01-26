@@ -12,7 +12,7 @@ testTrackKey = "Hover Kart Track" --export: Active track key, only used for test
 -- Organiser Params
 -- Current Track Key (the current race key to use for saving waypoints)
 organiserMode = false --export: if set to true this will allow new waypoints to be saved and exported
-radius = 20 --export: radius /this should nto be left public long term
+radius = 20 --export: radius /this should not be left public long term
 sponsorText = "Prize Sponsor - 1M " --export: Text by sponsor image.
 
 -- Globals
@@ -33,7 +33,7 @@ raceStarted = false
 messageParts = {} -- multipart messaging table
 gTab = "race" --race tracks new test config
 gState = "start" -- start, awaiting, ready, set, live, finished, error, organizer, test
-gData = json.decode('{"mainMessage": "Loading...", "toast": "Welcome to DU Racing" }')
+gData = { mainMessage = 'Loading...', toast = 'Welcome to DU Racing' }
 messageQueue = {}
 consumerStarted = false
 
@@ -42,12 +42,12 @@ duRacingLogo =
 
 -- Functions
 function handleTextCommandInput(text)
-    print("Command: " .. text, false)
+    print('Command: ' .. text, false)
 
     -- Help
-    if text == "help" then
+    if text == 'help' then
         -- Outputs all commands with a description
-        system.print("-==:: DU Racing Command Help ::==-")
+        system.print('-==:: DU Racing Command Help ::==-')
         system.print('"add waypoint {ALT+2}" - adds the current position to the track waypoints')
         system.print('"save track [track name]" - saves the stored waypoints to screen')
         system.print('"list tracks" - lists all track keys saved in the databank')
@@ -57,63 +57,63 @@ function handleTextCommandInput(text)
         return true
     end
 
-    if text == "add waypoint" then
+    if text == 'add waypoint' then
         if organiserMode == false then
-            system.print("Waypoints can only be saved in organizer mode.")
+            system.print('Waypoints can only be saved in organizer mode.')
             return false
         end
         return saveWaypoint()
     end
-    if text == "countdown" then
+    if text == 'countdown' then
         return startCountdown()
     end
-    if text == "start" then
+    if text == 'start' then
         if testRace == false then
-            doError("Races can only be started manually when in test mode")
+            doError('Races can only be started manually when in test mode')
             return false
         end
         return startRace()
     end
 
-    if text:find("save track ") then
-        local trackName = string.gsub(text, "save track ", "")
-        if trackName == "" then
-            system.print("A track name must be used when saving a track. eg 'save track Alioth Loop'")
+    if text:find('save track ') then
+        local trackName = string.gsub(text, 'save track ', '')
+        if trackName == '' then
+            system.print('A track name must be used when saving a track. eg "save track Alioth Loop"')
             return false
         end
         return saveTrack(trackName)
     end
 
-    if text == "list tracks" then
+    if text == 'list tracks' then
         local keys = json.decode(db.getKeys())
-        local out = ""
+        local out = ''
         for key, value in pairs(keys) do
-            if value ~= "activeRace" then
-                out = value .. ", " .. out
+            if value ~= 'activeRace' then
+                out = value .. ', ' .. out
             end
         end
         return system.print(out)
     end
 
-    if text:find("export track ") then
-        local trackName = string.gsub(text, "export track ", "")
-        if trackName == "" then
-            system.print("A track name must be used when exporting a track. eg 'export track Alioth Loop'")
+    if text:find('export track ') then
+        local trackName = string.gsub(text, 'export track ', '')
+        if trackName == '' then
+            system.print('A track name must be used when exporting a track. eg "export track Alioth Loop"')
             return false
         end
         return exportTrack(trackName)
     end
 
-    if text:find("broadcast track ") then
-        local trackName = string.gsub(text, "broadcast track ", "")
-        if trackName == "" then
-            system.print("A track name must be used when broadcasting a track. eg 'broadcast track Alioth Loop'")
+    if text:find('broadcast track ') then
+        local trackName = string.gsub(text, 'broadcast track ', '')
+        if trackName == '' then
+            system.print('A track name must be used when broadcasting a track. eg "broadcast track Alioth Loop"')
             return false
         end
         return broadcastTrack(trackName)
     end
 
-    system.print("I can't... " .. text)
+    system.print("I can't... "..text)
 end
 
 -- Message part system functions
@@ -176,47 +176,38 @@ function splitBroadcast(action, channel, message)
     end
 end
 
--- calcDistance(vec3 v1, vec3 v2)
+-- calcDistance(worldPos v1, worldPos v2)
 -- Returns the distance in metres between 2 vectors
 function calcDistance(v1, v2)
-    v = {}
-    v.x = v1.x - v2.x
-    v.y = v1.y - v2.y
-    v.z = v1.z - v2.z
-    return math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+    return (vec3(v2) - vec3(v1)):len()
 end
 
 -- xyzPosition(float x, float y, float z)
 -- Returns a waypoint string from the given coordinates
 function xyzPosition(x, y, z)
     -- 0,2 for Alioth, although this seems broken it outputs 0,0 and works correctly, when setting the pos as "0,2" for Alioth the waypoint is incorrect
-    return "::pos{0,0," .. tostring(x) .. "," .. tostring(y) .. "," .. tostring(z) .. "}"
+    return '::pos{0,0,'..x..','..y..','..z..'}'
 end
 
 -- checkWaypoint()
 -- returns bool if user is in range of waypoint, triggers nextWaypoint
 function checkWaypoint()
-    if currentWaypoint == nil then
-        return false
-    end
+
     -- This is checked on loop
-    pos = vec3(core.getConstructWorldPos())
-    dest = vec3(waypoints[currentWaypointIndex])
+    distance = calcDistance(core.getConstructWorldPos(), waypoints[currentWaypointIndex])
 
-    distance = calcDistance(pos, dest)
-
-    -- Are we within 20m of our target destination?
-    if distance <= radius then
+    -- Are we within the radius of our target destination?
+    if currentWaypoint and distance <= radius then
         -- If so, save time, trigger next waypoint
-        local t = round(system.getTime() - splitTime)
-        table.insert(sectionTimes, t)
+		local sysTime = system.getTime()
+        table.insert(sectionTimes, round(sysTime - splitTime))
         -- reset split time
-        splitTime = system.getTime()
+        splitTime = sysTime
         nextWaypoint()
         return true
-    end
-
-    return false
+	else
+		return false
+	end
 end
 
 -- nextWaypoint
@@ -228,10 +219,9 @@ function nextWaypoint()
     incrementWaypoint()
     nextPoint = waypoints[currentWaypointIndex]
     -- no more waypoints?
-    if nextPoint == nil then
+    if not nextPoint then
         -- display lap time
-        local lap = round(now - lapTime)
-        table.insert(lapTimes, lap)
+        table.insert(lapTimes, round(now - lapTime))
 
         -- check laps
         decrementLaps()
@@ -287,13 +277,11 @@ function startRace()
         print("GO!", true)
         raceStarted = true
         -- set first waypoint
-        currentWaypoint = vec3(waypoints[1][1], waypoints[1][2], waypoints[1][3])
-        system.setWaypoint(xyzPosition(currentWaypoint.x, currentWaypoint.y, currentWaypoint.z))
+        system.setWaypoint(xyzPosition(waypoints[1][1], waypoints[1][2], waypoints[1][3]))
 
         -- set start time and first split time
         startTime = system.getTime()
-        lapTime = startTime
-        splitTime = startTime
+        lapTime, splitTime = startTime, startTime
     end
 end
 
@@ -325,7 +313,7 @@ end
 -- End Race
 function endRace()
     system.setWaypoint(nil)
-     --TODO where do we set final waypoint?
+    --TODO where do we set final waypoint? Might be a box stop area / parking area?
 
     gData.mainMessage = "Final time " .. formatTime(endTime - startTime)
 
@@ -392,8 +380,8 @@ function round(n)
     return tonumber(string.format("%.3f", n))
 end
 
-function round2(n)
-    return tonumber(string.format("%.0f", n))
+function intFormat0(n)
+    return string.format("%.f", n)
 end
 -- Emitter/Receiver functions
 
@@ -442,11 +430,11 @@ end
 -- Save waypoint
 function saveWaypoint()
     -- Saves the current position as a waypoint
-    local pos = vec3(core.getConstructWorldPos())
-    table.insert(savedWaypoints, {pos.x, pos.y, pos.z})
+    table.insert(savedWaypoints, core.getConstructWorldPos())
 
     -- Output to lua console for debug
-    local curr = xyzPosition(pos.x, pos.y, pos.z)
+	local pos = core.getConstructWorldPos()
+    local curr = xyzPosition(pos[1], pos[2], pos[3])
     system.print(curr)
 end
 
@@ -744,6 +732,7 @@ function addStaticWidget(parentPanel, value, label, unit)
     return tempData
 end
 
+--[[ currently not used
 function updateTime()
     if not raceStarted then
         return
@@ -752,22 +741,20 @@ function updateTime()
     system.updateData(totalTimeRef, '{"value": "' .. formatTime(now - startTime) .. '"}')
     system.updateData(lapTimeRef, '{"value": "' .. formatTime(now - lapTime) .. '"}')
 end
+]]
 
 function formatTime(seconds)
+	local function leadingZero(num)
+		return num < 10 and '0'..num or num
+	end
+
     local secondsRemaining = seconds
     local hours = math.floor(secondsRemaining / 3600)
     secondsRemaining = modulus(secondsRemaining, 3600)
     local minutes = math.floor(secondsRemaining / 60)
-    local seconds = round2(modulus(secondsRemaining, 60))
+    local seconds = intFormat0(modulus(secondsRemaining, 60))
 
     return leadingZero(hours) .. ":" .. leadingZero(minutes) .. ":" .. leadingZero(seconds)
-end
-
-function leadingZero(num)
-    if (num < 10) then
-        return "0" .. num
-    end
-    return num
 end
 
 -- Race screen
@@ -868,11 +855,7 @@ end
 
 --Helper function to wrap system.print().  If second argument is true, it will also call a toast with the same message.
 function print(msg, doToast)
-    if (doToast) then
-        toast(msg)
-    end
-    return system.print(msg)
+    return system.print(msg), doToast and toast(msg)
 end
 
 main()
-
