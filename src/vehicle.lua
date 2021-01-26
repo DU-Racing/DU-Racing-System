@@ -277,7 +277,8 @@ function startRace()
         print("GO!", true)
         raceStarted = true
         -- set first waypoint
-        system.setWaypoint(xyzPosition(waypoints[1][1], waypoints[1][2], waypoints[1][3]))
+	currentWaypoint = vec3(waypoints[1][1], waypoints[1][2], waypoints[1][3])
+        system.setWaypoint(xyzPosition(currentWaypoint.x, currentWaypoint.y, currentWaypoint.z))
 
         -- set start time and first split time
         startTime = system.getTime()
