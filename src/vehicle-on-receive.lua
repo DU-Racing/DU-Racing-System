@@ -32,3 +32,7 @@ end
 if channel == uid .. "-registered" then
     saveBroadcastedTrack(message)
 end
+
+if channel == uid .. "-data-received" then
+    unit.stopTimer('emitDataTillConfirmation')
+end

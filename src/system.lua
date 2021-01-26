@@ -222,6 +222,31 @@ function getKeysSortedByValue(tbl, sortFunction)
     return keys
 end
 
+function formatTime(seconds)
+    local secondsRemaining = seconds
+    local hours = math.floor(secondsRemaining / 3600)
+    secondsRemaining = modulus(secondsRemaining, 3600)
+    local minutes = math.floor(secondsRemaining / 60)
+    local seconds = round2(modulus(secondsRemaining, 60))
+
+    return leadingZero(hours) .. ":" .. leadingZero(minutes) .. ":" .. leadingZero(seconds)
+end
+
+function leadingZero(num)
+    if (num < 10) then
+        return "0" .. num
+    end
+    return num
+end
+
+function modulus(a, b)
+    return a - math.floor(a / b) * b
+end
+
+function round2(n)
+    return tonumber(string.format("%.0f", n))
+end
+
 function createTrack(str)
     local track = json.decode(str)
     return trackDB.setStringValue(track["name"], str)
@@ -263,7 +288,13 @@ end
 function setTime(timesJSON)
     -- Receives the time from the ship and stores in the db for this race
     -- Emits a confirmation message that the message was received, this stops the ship sending it
+    
     local data = json.decode(timesJSON)
+    if data == nil then
+        return false
+    end
+    -- emit confirmation
+    queueMessage(data['racer'] .. '-data-received', 'Received data')
 
     -- get the race from the db from the raceID passed
     local race = getRace(data["raceID"])
@@ -281,13 +312,13 @@ function setTime(timesJSON)
         -- if the current time is not 0 then cheating?
         if value["racer"] == data["racer"] then
             -- Set the time here, record laps are stored on diff db
-            --race["racers"][key] = { racer = value["racer"], time = data["lapTime"], name = value["name"] }
+            --race["racers"][key] = { racer = value["racer"], time = data["finalTime"], name = value["name"] }
 
             -- Check if this racer is DQF
             if race["racers"][key]["time"] ~= "DQF" then
-                race["racers"][key]["time"] = data["lapTime"]
+                race["racers"][key]["time"] = data["finalTime"]
                 raceDB.setStringValue(data["raceID"], json.encode(race))
-                checkRankedTime(data["lapTime"], race["trackKey"], data["racer"], data["raceID"])
+                checkRankedTime(data["finalTime"], race["trackKey"], data["racer"], data["raceID"])
             end
         end
     end
@@ -397,18 +428,22 @@ function buildRaceStatScreen()
             "<tr><td>" ..
                 pos ..
                     "</td><td>" ..
-                        race["racers"][key]["name"] .. "</td><td>" .. race["racers"][key]["time"] .. "</td></tr>"
+                        race["racers"][key]["name"] .. "</td><td>" .. formatTime(race["racers"][key]["time"]) .. "</td></tr>"
         pos = pos + 1
     end
+    local html = ' <style> body { background: #000 url(assets.prod.novaquark.com/100694/8f81cc10-5f12-4f17-84db-314fbdb7c186.jpg) center center no-repeat; background-size: cover; color: #a1ecfb !important; } #wrapper { padding: 2vw; width: 100vw; height: 100vh; margin: 0; background-color: rgba(2,17,20,0.65); } #header { height: calc(10vh - 1vw); width: 98vw; } h1 { font-size: 4vw !important; width: 100%; text-align: center; text-shadow: 0 0 4px rgba(161,236,251,0.65); text-transform: uppercase; color: #a1ecfb !important; } #content { height: 85vh; width: 98vw; } table { margin-top: 1vh; width: 100%; } table th { display: none; padding: 1vh 3vh; font-size: 4vw; text-align: center; background-color: rgb(227, 68, 57); } table th:first-child { border-top-left-radius: 20px; } table td { font-size: 1.5vw; padding: 3vh; text-align: center; color: #a1ecfb !important; display: inline-block; } table tbody tr { margin: 1vh 0; display: block; background-color: rgba(2,17,20,0.65); width: calc(100% - 2vh); border: 1px solid rgb(2, 157, 187); } table tbody tr:first-child { box-shadow: 0 0 8px rgba(161,236,251,0.65); } table tbody tr td:nth-child(1){ width: calc(10% - 6vh); } table tbody tr td:nth-child(2){ width: calc(70% - 6vh); } table tbody tr td:nth-child(3){ width: calc(10% - 6vh); } table tbody tr:first-child td { font-size: 3vw; } table tbody tr:nth-child(2) td { font-size: 2.5vw; } table tbody tr:nth-child(3) td { font-size: 2vw; } #footer { height: calc(5vh - 1vw); width: 98vw; } #footer p { text-align: right; font-size: 1.5vw; margin: 0; padding: 0; position: absolute; right: 2vw; bottom: 2vh; } </style> <div id="wrapper"> <div id="header"><h1>' ..
+        trackName ..
+        '</h1></div> <div id="content"> <table> <thead> <tr> <th>Pos</th> <th>Racer</th> <th>Time</th> </tr> </thead> <tbody> ' ..
+        tableItems ..
+        ' </tbody> </table> </div> <div id="footer"> <p>du-racing - version ' ..
+        version .. "</p> </div> </div> "
 
-    screen.setHTML(
-        ' <style> body { background: #000 url(assets.prod.novaquark.com/100694/8f81cc10-5f12-4f17-84db-314fbdb7c186.jpg) center center no-repeat; background-size: cover; color: #a1ecfb !important; } #wrapper { padding: 2vw; width: 100vw; height: 100vh; margin: 0; background-color: rgba(2,17,20,0.65); } #header { height: calc(10vh - 1vw); width: 98vw; } h1 { font-size: 4vw !important; width: 100%; text-align: center; text-shadow: 0 0 4px rgba(161,236,251,0.65); text-transform: uppercase; color: #a1ecfb !important; } #content { height: 85vh; width: 98vw; } table { margin-top: 1vh; width: 100%; } table th { display: none; padding: 1vh 3vh; font-size: 4vw; text-align: center; background-color: rgb(227, 68, 57); } table th:first-child { border-top-left-radius: 20px; } table td { font-size: 1.5vw; padding: 3vh; text-align: center; color: #a1ecfb !important; display: inline-block; } table tbody tr { margin: 1vh 0; display: block; background-color: rgba(2,17,20,0.65); width: calc(100% - 2vh); border: 1px solid rgb(2, 157, 187); } table tbody tr:first-child { box-shadow: 0 0 8px rgba(161,236,251,0.65); } table tbody tr td:nth-child(1){ width: calc(10% - 6vh); } table tbody tr td:nth-child(2){ width: calc(70% - 6vh); } table tbody tr td:nth-child(3){ width: calc(10% - 6vh); } table tbody tr:first-child td { font-size: 3vw; } table tbody tr:nth-child(2) td { font-size: 2.5vw; } table tbody tr:nth-child(3) td { font-size: 2vw; } #footer { height: calc(5vh - 1vw); width: 98vw; } #footer p { text-align: right; font-size: 1.5vw; margin: 0; padding: 0; position: absolute; right: 2vw; bottom: 2vh; } </style> <div id="wrapper"> <div id="header"><h1>' ..
-            trackName ..
-                '</h1></div> <div id="content"> <table> <thead> <tr> <th>Pos</th> <th>Racer</th> <th>Time</th> </tr> </thead> <tbody> ' ..
-                    tableItems ..
-                        ' </tbody> </table> </div> <div id="footer"> <p>du-racing - version ' ..
-                            version .. "</p> </div> </div> "
-    )
+    if screen then 
+        screen.setHTML(html)
+    end
+    if screen1 then
+        screen1.setHTML(html)
+    end
 end
 
 -- Build race time stats page
