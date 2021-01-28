@@ -246,18 +246,26 @@ function nextWaypoint()
 end
 function decrementLaps()
     remainingLaps = remainingLaps - 1
+    local lapsCompleted = totalLaps - remainingLaps
+    local currentLap = lapsCompleted + 1
     print("Lap complete", true)
     -- update the overlay
+    system.updateData(currentLapRef, '{"value":"' .. currentLap .. '"}')
+    system.updateData(
+        currentLapBarRef,
+        '{"percentage": ' .. math.floor((currentLap / totalLaps) * 100) .. "}"
+    )
     requestScreenUpdate()
 end
 function incrementWaypoint()
-    currentWaypointIndex = currentWaypointIndex + 1
     system.updateData(currentWaypointRef, '{"value":"' .. currentWaypointIndex .. '"}')
     system.updateData(
         currentWaypointBarRef,
         '{"percentage": ' .. math.floor((currentWaypointIndex / #waypoints) * 100) .. "}"
     )
+    currentWaypointIndex = currentWaypointIndex + 1    
 end
+
 
 function modulus(a, b)
     return a - math.floor(a / b) * b
@@ -565,6 +573,10 @@ function updateOverlay()
         '<span class="label">Laps: </span><span class="value">' ..
         (totalLaps - remainingLaps) .. '/' .. totalLaps .. "</span>" .. 
         "</div>" .. 
+        '<div class="info">' ..
+        '<span class="label">Waypoints: </span><span class="value">' ..
+        currentWaypointIndex .. '/' .. #waypoints .. "</span>" .. 
+        "</div>" .. 
         "</div>"
 
     -- disabled due to flicker
@@ -593,11 +605,11 @@ end
 function initOverlay()
     system.showScreen(1)
     --section: Race Status
-    raceInfoPanel = system.createWidgetPanel("Race Status")
+    raceInfoPanel = system.createWidgetPanel("DU Racing Clock")
     currentWaypointBarRef = addProgressWidget(raceInfoPanel, 1)
     currentWaypointRef = addStaticWidget(raceInfoPanel, "0", "Waypoint", "/3")
-    currentLapBarRef = addProgressWidget(raceInfoPanel, math.floor(1 / (totalLaps + 1) * 100))
-    currentLapRef = addStaticWidget(raceInfoPanel, "0", "Current Lap", "/" .. totalLaps)
+    currentLapBarRef = addProgressWidget(raceInfoPanel, 0)
+    currentLapRef = addStaticWidget(raceInfoPanel, "0", "Lap", "/" .. totalLaps)
 
     lapTimeRef = addStaticWidget(raceInfoPanel, "0:00:00.000", "Lap Time", "")
     totalTimeRef = addStaticWidget(raceInfoPanel, "0:00:00.000", "Total Time", "")
