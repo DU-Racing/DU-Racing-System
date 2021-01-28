@@ -4,8 +4,8 @@ teamName = "DU Racing" --export: The name of the team racing for
 colorRed = 0 --export: red color 0-255
 colorGreen = 0 --export: green color 0-255
 colorBlue = 255 --export: blue color 0-255
-testRace = false --export: if set to true this will not emit times but allow the course to be run
-testTrackKey = "Hover Kart Track" --export: Active track key, only used for test races
+testRace = true --export: if set to true this will not emit times but allow the course to be run
+testTrackKey = "TheRunTrack1" --export: Active track key, only used for test races
 --ad = "assets.prod.novaquark.com/100694/37f71083-7b2a-42cc-8728-44119d908ef2.png" --export: Sponsor for this race. default is DU Racing logo
 --map = "assets.prod.novaquark.com/74927/a28ec69c-1a26-4d85-b579-5acedc3f69c2.png" --export: Image for background on map
 
@@ -745,8 +745,12 @@ function addStaticWidget(parentPanel, value, label, unit)
     system.addDataToWidget(tempData, tempWidget)
     return tempData
 end
+--should be linked to update() function
+function mainUpdate()
+    checkWaypoint()
+    updateTime()
+end
 
---[[ currently not used
 function updateTime()
     if not raceStarted then
         return
@@ -755,10 +759,11 @@ function updateTime()
     system.updateData(totalTimeRef, '{"value": "' .. formatTime(now - startTime) .. '"}')
     system.updateData(lapTimeRef, '{"value": "' .. formatTime(now - lapTime) .. '"}')
 end
-]]
+
 
 function formatTime(seconds)
-	local function leadingZero(num)
+    local function leadingZero(num)
+        num = tonumber(num)
 		return num < 10 and '0'..num or num
 	end
 
@@ -766,8 +771,7 @@ function formatTime(seconds)
     local hours = math.floor(secondsRemaining / 3600)
     secondsRemaining = modulus(secondsRemaining, 3600)
     local minutes = math.floor(secondsRemaining / 60)
-    local seconds = intFormat0(modulus(secondsRemaining, 60))
-
+    local seconds = intFormat0(modulus(secondsRemaining, 60))    
     return leadingZero(hours) .. ":" .. leadingZero(minutes) .. ":" .. leadingZero(seconds)
 end
 
