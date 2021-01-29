@@ -250,19 +250,10 @@ function decrementLaps()
     local currentLap = lapsCompleted + 1
     print("Lap complete", true)
     -- update the overlay
-    system.updateData(currentLapRef, '{"value":"' .. currentLap .. '"}')
-    system.updateData(
-        currentLapBarRef,
-        '{"percentage": ' .. math.floor((currentLap / totalLaps) * 100) .. "}"
-    )
+    
     requestScreenUpdate()
 end
 function incrementWaypoint()
-    system.updateData(currentWaypointRef, '{"value":"' .. currentWaypointIndex .. '"}')
-    system.updateData(
-        currentWaypointBarRef,
-        '{"percentage": ' .. math.floor((currentWaypointIndex / #waypoints) * 100) .. "}"
-    )
     currentWaypointIndex = currentWaypointIndex + 1    
 end
 
@@ -507,7 +498,6 @@ function loadTrack(name)
         doError("No track waypoints found in database")
         return false
     end
-    system.updateData(currentWaypointRef, '{"value": 1, "unit": "/' .. #waypoints .. '"}')
     trackName = name
 end
 
@@ -606,10 +596,10 @@ function initOverlay()
     system.showScreen(1)
     --section: Race Status
     raceInfoPanel = system.createWidgetPanel("DU Racing Clock")
-    currentWaypointBarRef = addProgressWidget(raceInfoPanel, 1)
-    currentWaypointRef = addStaticWidget(raceInfoPanel, "0", "Waypoint", "/3")
-    currentLapBarRef = addProgressWidget(raceInfoPanel, 0)
-    currentLapRef = addStaticWidget(raceInfoPanel, "0", "Lap", "/" .. totalLaps)
+    --currentWaypointBarRef = addProgressWidget(raceInfoPanel, 1)
+    --currentWaypointRef = addStaticWidget(raceInfoPanel, "0", "Waypoint", "/3")
+    --currentLapBarRef = addProgressWidget(raceInfoPanel, 0)
+    --currentLapRef = addStaticWidget(raceInfoPanel, "0", "Lap", "/" .. totalLaps)
 
     lapTimeRef = addStaticWidget(raceInfoPanel, "0:00:00.000", "Lap Time", "")
     totalTimeRef = addStaticWidget(raceInfoPanel, "0:00:00.000", "Total Time", "")
@@ -779,12 +769,22 @@ function formatTime(seconds)
 		return num < 10 and '0'..num or num
 	end
 
+    function postZeros(num)
+        if(string.len(num)<5)then 
+            return num..'00'
+        end
+        if(string.len(num)<6) then 
+            return num..'0'
+        end 
+        return num
+    end
+
     local secondsRemaining = seconds
     local hours = math.floor(secondsRemaining / 3600)
     secondsRemaining = modulus(secondsRemaining, 3600)
     local minutes = math.floor(secondsRemaining / 60)
-    local seconds = intFormat0(modulus(secondsRemaining, 60))    
-    return leadingZero(hours) .. ":" .. leadingZero(minutes) .. ":" .. leadingZero(seconds)
+    local seconds = modulus(secondsRemaining, 60)    
+    return leadingZero(hours) .. ':' .. leadingZero(minutes) .. ':' .. postZeros(leadingZero(round(seconds)))
 end
 
 -- Race screen
