@@ -215,6 +215,7 @@ end
 -- nextWaypoint
 -- returns null increments the active index in use of waypoint, sets the vec3 waypoint for user
 function nextWaypoint()
+    gState = "midrace"
     local now = system.getTime()
     -- Queries the databank and set the next waypoint
     print("Waypoint #" .. currentWaypointIndex .. " complete", true)
@@ -331,10 +332,12 @@ function endRace()
     print("Section times:  " .. json.encode(sectionTimes), false)
     print("Lap times:  " .. json.encode(lapTimes), false)
     print("Final time: " .. formatTime(finishTime), false)
+    raceStarted = false
     
-    if (besTime == nil or finishTime < bestTime) then
+    if (bestTime == nil or finishTime < bestTime) then
         --store track best time
-        db.setFloatValue(testTrackKey .. '-bestTime', (finishTime) )
+        updateBestTime(finishTime)
+        print("New best time! "..formatTime(finishTime), true)
     end
 
     -- Emit this data
@@ -342,6 +345,11 @@ function endRace()
         sendFinalTimes()
     end
 end
+
+function updateBestTime(yourTime) 
+    db.setFloatValue(testTrackKey .. '-bestTime-'..unit.getMasterPlayerId(), (finishTime) )
+    system.updateData(deltaTimeRef, '{"value": "' .. formatTime(yourTime) .. '"}')
+end 
 
 function consumeQueue()
     local sortedMessages = getKeysSortedByValue(
@@ -508,7 +516,10 @@ end
 -- load track
 function loadTrack(name)
     waypoints = getTrackWaypoints(name)
-    bestTime = db.getFloatValue(name..'-bestTime')
+    bestTime = db.getFloatValue(name..'-bestTime-'..unit.getMasterPlayerId())
+    if(bestTime ~= nil)then
+        updateBestTime(bestTime)
+    end
     if waypoints == nil then
         doError("No track waypoints found in database")
         return false
@@ -617,6 +628,10 @@ function updateOverlay()
 </div>
         ]]
     end
+    local currentWaypointIndexAdjusted = currentWaypointIndex
+    if(currentWaypointIndexAdjusted > #waypoints)then
+        currentwaypointIndexAdjusted = #waypoints
+    end 
     html =
         html ..
         '<div class="mainArea">' ..
@@ -640,7 +655,7 @@ function updateOverlay()
         "</div>" .. 
         '<div class="info">' ..
         '<span class="label">Waypoints: </span><span class="value">' ..
-        currentWaypointIndex .. '/' .. #waypoints .. "</span>" .. 
+        currentWaypointIndexAdjusted .. '/' .. #waypoints .. "</span>" .. 
         "</div>" .. 
         "</div>"
 
@@ -845,7 +860,7 @@ function addStaticWidget(parentPanel, value, label, unit)
     system.addDataToWidget(tempData, tempWidget)
     return tempData
 end
---should be linked to update() function
+--should be called by the unit.update() filter
 function mainUpdate()
     checkWaypoint()
     updateTime()
