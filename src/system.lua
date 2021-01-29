@@ -316,6 +316,7 @@ function setTime(timesJSON)
                 race["racers"][key]["time"] = data["finalTime"]
                 raceDB.setStringValue(data["raceID"], json.encode(race))
                 checkRankedTime(data["finalTime"], race["trackKey"], data["racer"], data["raceID"])
+                buildRaceStatScreen()
             end
         end
     end
@@ -420,13 +421,15 @@ function buildRaceStatScreen()
     local pos = 1
 
     for _, key in ipairs(sortedKeys) do
-        tableItems =
-            tableItems ..
-            "<tr><td>" ..
+        if race["racers"][key]["time"] > 0 then 
+            tableItems =
+                tableItems ..
+                "<tr><td>" ..
                 pos ..
-                    "</td><td>" ..
-                        race["racers"][key]["name"] .. "</td><td>" .. formatTime(race["racers"][key]["time"]) .. "</td></tr>"
-        pos = pos + 1
+                "</td><td>" ..
+                race["racers"][key]["name"] .. "</td><td>" .. formatTime(race["racers"][key]["time"]) .. "</td></tr>"
+            pos = pos + 1
+        end
     end
     local html = ' <style> body { background: #000 url(assets.prod.novaquark.com/100694/8f81cc10-5f12-4f17-84db-314fbdb7c186.jpg) center center no-repeat; background-size: cover; color: #a1ecfb !important; } #wrapper { padding: 2vw; width: 100vw; height: 100vh; margin: 0; background-color: rgba(2,17,20,0.65); } #header { height: calc(10vh - 1vw); width: 98vw; } h1 { font-size: 4vw !important; width: 100%; text-align: center; text-shadow: 0 0 4px rgba(161,236,251,0.65); text-transform: uppercase; color: #a1ecfb !important; } #content { height: 85vh; width: 98vw; } table { margin-top: 1vh; width: 100%; } table th { display: none; padding: 1vh 3vh; font-size: 4vw; text-align: center; background-color: rgb(227, 68, 57); } table th:first-child { border-top-left-radius: 20px; } table td { font-size: 1.5vw; padding: 3vh; text-align: center; color: #a1ecfb !important; display: inline-block; } table tbody tr { margin: 1vh 0; display: block; background-color: rgba(2,17,20,0.65); width: calc(100% - 2vh); border: 1px solid rgb(2, 157, 187); } table tbody tr:first-child { box-shadow: 0 0 8px rgba(161,236,251,0.65); } table tbody tr td:nth-child(1){ width: calc(10% - 6vh); } table tbody tr td:nth-child(2){ width: calc(70% - 6vh); } table tbody tr td:nth-child(3){ width: calc(10% - 6vh); } table tbody tr:first-child td { font-size: 3vw; } table tbody tr:nth-child(2) td { font-size: 2.5vw; } table tbody tr:nth-child(3) td { font-size: 2vw; } #footer { height: calc(5vh - 1vw); width: 98vw; } #footer p { text-align: right; font-size: 1.5vw; margin: 0; padding: 0; position: absolute; right: 2vw; bottom: 2vh; } </style> <div id="wrapper"> <div id="header"><h1>' ..
         trackName ..
