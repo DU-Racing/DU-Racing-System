@@ -25,7 +25,7 @@ end
 
 if channel == raceID then
     if message == "start" then
-        startRace()
+        startCountdown()
     end
 end
 

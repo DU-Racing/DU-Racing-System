@@ -4,16 +4,13 @@ teamName = "DU Racing" --export: The name of the team racing for
 colorRed = 0 --export: red color 0-255
 colorGreen = 0 --export: green color 0-255
 colorBlue = 255 --export: blue color 0-255
-testRace = true --export: if set to true this will not emit times but allow the course to be run
-testTrackKey = "TheRunTrack1" --export: Active track key, only used for test races
---ad = "assets.prod.novaquark.com/100694/37f71083-7b2a-42cc-8728-44119d908ef2.png" --export: Sponsor for this race. default is DU Racing logo
---map = "assets.prod.novaquark.com/74927/a28ec69c-1a26-4d85-b579-5acedc3f69c2.png" --export: Image for background on map
+testRace = false --export: if set to true this will not emit times but allow the course to be run
+testTrackKey = "Hover Kart Track" --export: Active track key, only used for test races
 
 -- Organiser Params
 -- Current Track Key (the current race key to use for saving waypoints)
 organiserMode = false --export: if set to true this will allow new waypoints to be saved and exported
 radius = 20 --export: radius /this should not be left public long term
-sponsorText = "Prize Sponsor - 1M " --export: Text by sponsor image.
 
 -- Globals
 waypoints = {}
@@ -253,7 +250,6 @@ function decrementLaps()
     local currentLap = lapsCompleted + 1
     print("Lap complete", true)
     -- update the overlay
-    
     requestScreenUpdate()
 end
 function incrementWaypoint()
@@ -264,11 +260,6 @@ end
 function modulus(a, b)
     return a - math.floor(a / b) * b
 end
-
--- Race Countdown
--- Sets the active race which is used to fetch waypoints
--- Triggered from a startline emitter, which waits 3 seconds then emits
--- Countdown 3,2,1 GO (await emit from start system, trigger start race)
 
 -- Start Race
 function startRace()
@@ -444,13 +435,15 @@ function sendFinalTimes()
     -- Save these locally for inspection if needed
     local jsonStr = json.encode(times)
     db.setStringValue('last-race-data', jsonStr)
+    -- Emit this now
+    emitDataTillConfirmation(jsonStr)
     -- This is an important notification, it should be sent on a loop until a confirmation message is returned
     unit.setTimer('emitDataTillConfirmation', 3)
 
 end
 
-function emitDataTillConfirmation()
-    local jsonStr = db.getStringValue('last-race-data')
+function emitDataTillConfirmation(jsonStr)
+    -- local jsonStr = db.getStringValue('last-race-data')
     if jsonStr ~= nil then
         local send = string.gsub(jsonStr, '"', '\\"')
         system.print('trying send: ' .. send)
@@ -659,11 +652,6 @@ function updateOverlay()
         "</div>" .. 
         "</div>"
 
-    -- disabled due to flicker
-    --html = html ..
-    --     '<div style="position: absolute; right: 5vw; top: 25vh;width: 10vw; height: 8vh;border:5px solid red;"><img class="map" src="'..map..'"/></div>'..
-    --     '<div style="position: absolute; left: 3vw; top: 2vh;width: 10vw;"><img class="ad" src="'..ad..'"/><h2 class"sponsorText">'..sponsorText..'</h2></div>'..
-    --     '</div>'
     system.setScreen(styles .. html)
 end
 
@@ -686,34 +674,9 @@ function initOverlay()
     system.showScreen(1)
     --section: Race Status
     raceInfoPanel = system.createWidgetPanel("DU Racing Clock")
-    --currentWaypointBarRef = addProgressWidget(raceInfoPanel, 1)
-    --currentWaypointRef = addStaticWidget(raceInfoPanel, "0", "Waypoint", "/3")
-    --currentLapBarRef = addProgressWidget(raceInfoPanel, 0)
-    --currentLapRef = addStaticWidget(raceInfoPanel, "0", "Lap", "/" .. totalLaps)
-
     lapTimeRef = addStaticWidget(raceInfoPanel, "0:00:00.000", "Lap Time", "")
     totalTimeRef = addStaticWidget(raceInfoPanel, "0:00:00.000", "Total Time", "")
     deltaTimeRef = addStaticWidget(raceInfoPanel, "--:--:--.---", "Your Best Lap", "")
-
-    --section: Race Info
-    --infoTitleWidget = system.createWidget(raceInfoPanel, "title")
-    --infoTitleData = system.createData('{"text":"Race Info"}')
-    --system.addDataToWidget(infoTitleData, infoTitleWidget)
---
-    --addStaticWidget(raceInfoPanel, "Mos Espa Circuit", "Track Name", "")
-    --addStaticWidget(raceInfoPanel, "XS-X-X", "Class", "")
-    --addStaticWidget(raceInfoPanel, "0:00:00.000", "Track Record", "")
-    --addStaticWidget(raceInfoPanel, "testKey1782", "Race Key", "")
-    --addStaticWidget(raceInfoPanel, "37", "Length", "km")
-    --addStaticWidget(raceInfoPanel, "Atmos", "Type", "")
-
-    --section: Driver Profile
-    --racerTitleWidget = system.createWidget(raceInfoPanel, "title")
-    --racerTitleData = system.createData('{"text":"Driver Profile / Config"}')
-    --system.addDataToWidget(racerTitleData, racerTitleWidget)
-
-    --addStaticWidget(raceInfoPanel, "Obsidian", "Team Name", "")
-    --addStaticWidget(raceInfoPanel, "Red", "Color", "")
 
     --set up styles
     styles =
@@ -899,16 +862,6 @@ function formatTime(seconds)
     local seconds = modulus(secondsRemaining, 60)    
     return leadingZero(hours) .. ':' .. leadingZero(minutes) .. ':' .. postZeros(leadingZero(round(seconds)))
 end
-
--- Race screen
--- Sets up the race screen
--- Default is welcome screen, with buttons for test race
-
--- Test screen shows saved races and allows them to be selected
--- Hit the start button to start the countdown, then test starts
-
--- If we have start time show it on the screen instead of the welcome with split times
--- If we have end time then show final time with split times
 
 -- Activate screen and UI
 initOverlay()

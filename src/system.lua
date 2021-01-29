@@ -286,35 +286,32 @@ end
 
 -- Receive Time
 function setTime(timesJSON)
-    -- Receives the time from the ship and stores in the db for this race
-    -- Emits a confirmation message that the message was received, this stops the ship sending it
-    
+
     local data = json.decode(timesJSON)
-    if data == nil then
+    if data == '' then
+        -- The ship is sending invalid data so tell it to stop sending
+        -- TODO: Update this to send an error to the vehicle so it can be checked
+        queueMessage(data['racer'] .. '-data-received', 'Received data')
         return false
     end
-    -- emit confirmation
+
     queueMessage(data['racer'] .. '-data-received', 'Received data')
 
-    -- get the race from the db from the raceID passed
     local race = getRace(data["raceID"])
-    if race == nil then
-        return false
+    if not race then
+        -- TODO: isn't this kind of an error we need to handle as well? I think in this case a ship assumes it's in a race that does not exist?
+        return false 
     end
 
     if race["status"] == "ended" then
-        -- The race has ended
-        return false
+        --This would occur if a race is manually ended before the last player crosses finish line
+        --This stops data being submitted to races after they are completed
+        return false 
     end
 
-    -- parse and set the times for this user (who should have an index already following registration)
     for key, value in pairs(race["racers"]) do
-        -- if the current time is not 0 then cheating?
         if value["racer"] == data["racer"] then
-            -- Set the time here, record laps are stored on diff db
-            --race["racers"][key] = { racer = value["racer"], time = data["finalTime"], name = value["name"] }
-
-            -- Check if this racer is DQF
+            -- The racer exists on the board already if DQF, just no time is assigned to them
             if race["racers"][key]["time"] ~= "DQF" then
                 race["racers"][key]["time"] = data["finalTime"]
                 raceDB.setStringValue(data["raceID"], json.encode(race))
