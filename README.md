@@ -24,19 +24,36 @@ This script allows any race track owner or event organiser set up and manage a r
 * Ship classification - Automatically classify a ship for racing based on the components fitted.
 
 ## DU Racing Official Events
-To take part in DU Racing official events, with prizes and long standing leaderboards, you will need to purchase a pre-made ship or core with the system pre-loaded. This ensures no manipulation of the scripts can take place and keeps eveything equal. Contact us in game for more information or visit the main DU Racing track at ::pos{0,2,-14.6622,-12.0493,0.0004} (Alioth)
+To take part in DU Racing official events, with prizes and leaderboards, you will need to purchase a pre-made ship or core with the system pre-loaded. This ensures no manipulation of the scripts can take place and keeps eveything equal. Contact us in game for more information or visit the main DU Racing track at ::pos{0,2,-14.6622,-12.0493,0.0004} (Alioth)
 
 ## Vehicle Configuration
+Racers require the following components: Programming Board, Emitter, Receiver.
 
-### Component Setup
+The board must be linked to the Core, Emitter, Receiver and optionally up to 3 lights that will have the color set based on the ship parameters.
 
 ## Vehicle Operation
+When you have started the board, you can type 'help' in the Lua chat console to see a list of commands.
 
 ### Organiser Mode
+Organiser mode allows you to plot out a new track. To enter Organiser mode, right click the programming board and enable the checkbox. There are a couple of other parameters which are useful here. The first is radius, which is the distance racers need to get within the waypoint to proceed to the next one, and lapSetting which is the number of laps for this track.
+
+Once you have these set, activate the board and get in the vehicle then proceed to set waypoints where needed using ALT+2 or typing 'add waypoint' in the Lua chat.
+
+When you completed the waypoints, type 'save track Your Track Name'. This will save the track information to the vehicle and allow you to run a test on it before completing. To run a test, check the next section.
+
+When you are happy with the track, you can type 'broadcast track Your Track Name' in to the Lua console and it will send the data to the central system where it can then be used for races.
 
 ### Test Mode
+Test mode allows tracks to be tested and races to be started by the racer themselves. No lap data is sent to the central system during these tests. First you will need to set the 'testTrackKey' parameter to match the name of the track you want to test. This would have been set previously in organiser mode, or broadcasted to your vehicle from the central system.
+
+When this is set, activate the board and get in the vehicle. You can now start the test race by typing 'start' in the Lua console, or by pressing ALT+1.
 
 ### Race Mode
+By default, the vehicle is in race mode. The parameter 'raceID' needs to be set to match the one provided by the race organiser.
+
+When the board is activated it will attempt to register with the central race system. This will sign the racer up to the race and download the track that will be used. The vehicle should complete registration within 10 seconds of board activation, when this has happened it will show a message 'awaiting race start'.
+
+Once the start signal has been sent, the countdown to start will begin on the racers HUD with lights, and then the race begins and each waypoint needs to be hit in order to proceed to the next. When all waypoints and laps are completed, the vehicle will then attempt to bradcast the race statistics back to the central system. Thedata will be broadcast on a loop until the central system confirms it received it.
 
 ## System Configuration
 
