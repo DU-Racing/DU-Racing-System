@@ -10,7 +10,7 @@ testTrackKey = "Hover Kart Track" --export: Active track key, only used for test
 -- Organiser Params
 -- Current Track Key (the current race key to use for saving waypoints)
 organiserMode = false --export: if set to true this will allow new waypoints to be saved and exported
-radius = 20 --export: radius /this should not be left public long term
+radius = 20 --export: radius /this should not be left public long term. Broadcast this with the track info?
 lapSetting = 3 --export: Number of laps to use when making a new track
 
 -- Globals
@@ -57,59 +57,69 @@ function handleTextCommandInput(text)
     end
 
     if text == 'add waypoint' then
-        if organiserMode == false then
-            system.print('Waypoints can only be saved in organizer mode.')
-            return false
-        end
-        return saveWaypoint()
+        if organiserMode then
+            return saveWaypoint()
+        else
+			system.print('Waypoints can only be saved in organizer mode.')
+			return false
+		end
     end
     if text == 'countdown' then
         return startCountdown()
     end
     if text == 'start' then
-        if testRace == false then
-            doError('Races can only be started manually when in test mode')
-            return false
-        end
-        return startCountdown()
+        if testRace then
+			return startCountdown()
+        else
+			doError('Races can only be started manually when in test mode')
+			return false
+		end
     end
 
     if text:find('save track ') then
         local trackName = string.gsub(text, 'save track ', '')
-        if trackName == '' then
-            system.print('A track name must be used when saving a track. eg "save track Alioth Loop"')
-            return false
-        end
-        return saveTrack(trackName)
+        if trackName ~= '' then
+            return saveTrack(trackName)
+        else
+			system.print('A track name must be used when saving a track. eg "save track Alioth Loop"')
+			return false
+		end
     end
 
     if text == 'list tracks' then
-        local keys = json.decode(db.getKeys())
-        local out = ''
-        for key, value in pairs(keys) do
-            if value ~= 'activeRace' then
-                out = value .. ', ' .. out
-            end
-        end
-        return system.print(out)
+        local keys = db.getKeys()
+		if keys ~= '[]' then
+			keys = json.decode(db.getKeys())
+			local out = ''
+			for key, value in pairs(keys) do
+				if value ~= 'activeRace' then
+					out = value .. ', ' .. out
+				end
+			end
+			return system.print(out)
+		else
+			system.print('No tracks saved.')
+		end
     end
 
     if text:find('export track ') then
         local trackName = string.gsub(text, 'export track ', '')
-        if trackName == '' then
-            system.print('A track name must be used when exporting a track. eg "export track Alioth Loop"')
+        if trackName ~= '' then
+            return exportTrack(trackName)
+        else
+			system.print('A track name must be used when exporting a track. eg "export track Alioth Loop"')
             return false
-        end
-        return exportTrack(trackName)
+		end
     end
 
     if text:find('broadcast track ') then
         local trackName = string.gsub(text, 'broadcast track ', '')
-        if trackName == '' then
-            system.print('A track name must be used when broadcasting a track. eg "broadcast track Alioth Loop"')
+        if trackName ~= '' then
+			return broadcastTrack(trackName)
+        else
+			system.print('A track name must be used when broadcasting a track. eg "broadcast track Alioth Loop"')
             return false
         end
-        return broadcastTrack(trackName)
     end
 
     system.print("I can't... "..text)
@@ -264,7 +274,7 @@ end
 -- Start Race
 function startRace()
     unit.stopTimer('countGo')
-    if raceStarted == false then
+    if not raceStarted or testRace then
         gData.mainMessage = ''
         gState = 'green'
         print('GO!', true)
@@ -283,13 +293,15 @@ end
 --TODO Counts down from 5 to go. Needs to be able to communicate with tower
 -- Suggest refactor on this to use 1 function that decrements a value
 function startCountdown()
-    unit.setTimer('count3', 1)
-    unit.setTimer('count2', 2)
-    unit.setTimer('count1', 3)
-    unit.setTimer('countSet', 4)
-    unit.setTimer('countGo', 5)
-    gData.mainMessage = ''
-    gState = 'red3'
+	if not raceStarted or testRace then
+		unit.setTimer('count3', 1)
+		unit.setTimer('count2', 2)
+		unit.setTimer('count1', 3)
+		unit.setTimer('countSet', 4)
+		unit.setTimer('countGo', 5)
+		gData.mainMessage = ''
+		gState = 'red3'
+	end
 end
 function countdownReady3()
     unit.stopTimer('count3')
@@ -297,7 +309,7 @@ function countdownReady3()
     print('Ready.', true)
 end
 function countdownReady2()
-    unit.stopTimer("count2")
+    unit.stopTimer('count2')
     gState = 'red2'
     print('Ready..', true)
 end
@@ -391,11 +403,11 @@ function getCompleteMessage()
 end
 
 function round(n)
-    return tonumber(string.format("%.3f", n))
+    return tonumber(string.format('%.3f', n))
 end
 
 function intFormat0(n)
-    return string.format("%.f", n)
+    return string.format('%.f', n)
 end
 -- Emitter/Receiver functions
 
@@ -444,10 +456,10 @@ end
 
 function emitDataTillConfirmation(jsonStr)
     -- local jsonStr = db.getStringValue('last-race-data')
-    if jsonStr ~= nil then
+    if jsonStr then
         local send = string.gsub(jsonStr, '"', '\\"')
         system.print('trying send: ' .. send)
-        emitter.send(raceID .. "-finish", send)
+        emitter.send(raceID .. '-finish', send)
     else
         system.print('json data is nil')
     end
@@ -502,10 +514,10 @@ end
 function loadTrack(name)
     waypoints = getTrackWaypoints(name)
     bestTime = db.getFloatValue(name..'-bestTime-'..unit.getMasterPlayerId())
-    if(bestTime ~= nil)then
+    if bestTime then
         updateBestTime(bestTime)
     end
-    if waypoints == nil then
+    if not waypoints then
         doError('No track waypoints found in database')
         return false
     end
@@ -515,11 +527,11 @@ end
 -- export track
 function exportTrack(trackName)
     local track = db.getStringValue(trackName)
-    if track == nil then
+    if not track then
         doError('ERROR: Track not found')
         return false
     end
-    if screen ~= nil then
+    if screen then
         screen.setHTML(track)
         return system.print('Track has been exported to the screen HTML')
     end
@@ -528,7 +540,7 @@ end
 
 function toggleTestMode()
     testRace = ~testRace
-    if (testRace) then
+    if testRace then
         enterTestMode()
     else
         exitTestMode()
@@ -613,10 +625,14 @@ function updateOverlay()
 </div>
         ]]
     end
-    local currentWaypointIndexAdjusted = currentWaypointIndex
-    if(currentWaypointIndexAdjusted > #waypoints)then
-        currentwaypointIndexAdjusted = #waypoints
-    end 
+	local waypointText, lapsText
+    if gState == 'start' or gState == 'awaiting' then
+		waypointText, lapsText == '---','---'
+	else
+		local currentWaypointIndexAdjusted = currentWaypointIndexAdjusted > #waypoints and #waypoints or currentWaypointIndex
+		waypointText = currentWaypointIndexAdjusted .. '/' .. #waypoints
+		lapsText = (totalLaps - remainingLaps) .. '/' .. totalLaps
+	end
     html =
         html ..
         '<div class="mainArea">' ..
@@ -636,11 +652,11 @@ function updateOverlay()
         '</div>' ..
         '<div class="info">' ..
         '<span class="label">Laps: </span><span class="value">' ..
-        (totalLaps - remainingLaps) .. '/' .. totalLaps .. "</span>" .. 
+        lapsText .. "</span>" .. 
         '</div>' .. 
         '<div class="info">' ..
         '<span class="label">Waypoints: </span><span class="value">' ..
-        currentWaypointIndexAdjusted .. '/' .. #waypoints .. "</span>" .. 
+        waypointText .. "</span>" .. 
         '</div>' .. 
         '</div>'
 
@@ -817,7 +833,7 @@ function addStaticWidget(parentPanel, value, label, unit)
 end
 --should be called by the unit.update() filter
 function mainUpdate()
-    checkWaypoint()
+    checkWaypoint() --this might even go in system.flush as update might miss smth at high speeds
     updateTime()
 end
 
@@ -857,19 +873,19 @@ end
 
 -- Activate screen and UI
 initOverlay()
-if screen ~= nil then
+if screen then
     screen.activate()
 end
 
 function setDefaults()
     -- Lights (if set)
-    if light1 ~= nil then 
+    if light1 then 
         light1.setRGBColor(colorRed, colorGreen, colorBlue)
     end
-    if light2 ~= nil then 
+    if light2 then 
        light2.setRGBColor(colorRed, colorGreen, colorBlue)
     end
-    if light3 ~= nil then 
+    if light3 then 
        light3.setRGBColor(colorRed, colorGreen, colorBlue)
     end
 end
@@ -929,7 +945,7 @@ function exitTestMode()
 end
 function setState(newState, newData, clear)
     gState = newState
-    if (clear == true) then
+    if clear then
         gData = newData
     else
         --todo, only overwrite new data
@@ -946,6 +962,5 @@ function print(msg, doToast)
     return system.print(msg), doToast and toast(msg)
 end
 
+unit.hide()
 main()
-
-
