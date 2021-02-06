@@ -17,7 +17,7 @@ lapSetting = 3 --export: Number of laps to use when making a new track
 waypoints = {}
 sectionTimes = {} -- stores the times for each section
 savedWaypoints = {} -- stores the waypoints when an organiser is plotting a race
-currentWaypointIndex = 1 -- keeps track of the current active waypoint index
+currentWaypointIndex = 0 -- keeps track of the current active waypoint index
 currentWaypoint = nil -- vec3 of the current waypoint poisition, used for working out distance
 startTime = 0 -- start time in ms
 endTime = 0 -- end time ms
@@ -627,11 +627,11 @@ function updateOverlay()
     end
 	local waypointText, lapsText
     if gState == 'start' or gState == 'awaiting' then
-		waypointText, lapsText == '---','---'
-	else
-		local currentWaypointIndexAdjusted = currentWaypointIndexAdjusted > #waypoints and #waypoints or currentWaypointIndex
+		waypointText, lapsText = '---','---'
+    else
+		local currentWaypointIndexAdjusted = currentWaypointIndex > #waypoints and #waypoints or currentWaypointIndex
 		waypointText = currentWaypointIndexAdjusted .. '/' .. #waypoints
-		lapsText = (totalLaps - remainingLaps) .. '/' .. totalLaps
+		lapsText = ((totalLaps - remainingLaps) + 1) .. '/' .. totalLaps
 	end
     html =
         html ..
@@ -897,12 +897,10 @@ function main()
         newRaceInfoPanel = system.createWidgetPanel('New Race')
         gState = 'organiser'
         print('-==:: DU Racing Organiser Mode ::==-', false)
-        print(
-            [[
-    "Travel to waypoints, type 'add waypoint' in lua console or press {ALT+2} to save the current location as a new waypoint. 
-    Type 'save track [track name]' to save the track or 'broadcast track [track name]' to add it to the central system."]],
-            false
-        )
+        print([[To create a new track type "add waypoint" in the lua console or press "ALT+2" to save the current location as a new waypoint.
+        The first waypoint should be at the start area, last at the finish line.
+        Type "save track 'track name'" to save the track local and optional "broadcast track 'track name'" afterwards to add it to the central system.]]
+        ,false)
         gData.mainMessage = ''
         toast('Entering Organizer Mode')
     elseif testRace then
@@ -964,3 +962,4 @@ end
 
 unit.hide()
 main()
+

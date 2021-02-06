@@ -53,19 +53,22 @@ By default, the vehicle is in race mode. The parameter 'raceID' needs to be set 
 
 When the board is activated it will attempt to register with the central race system. This will sign the racer up to the race and download the track that will be used. The vehicle should complete registration within 10 seconds of board activation, when this has happened it will show a message 'awaiting race start'.
 
-Once the start signal has been sent, the countdown to start will begin on the racers HUD with lights, and then the race begins and each waypoint needs to be hit in order to proceed to the next. When all waypoints and laps are completed, the vehicle will then attempt to bradcast the race statistics back to the central system. Thedata will be broadcast on a loop until the central system confirms it received it.
+Once the start signal has been sent, the countdown to start will begin on the racers HUD with lights, and then the race begins and each waypoint needs to be hit in order to proceed to the next. When all waypoints and laps are completed, the vehicle will then attempt to bradcast the race statistics back to the central system. The data will be broadcast on a loop until the central system confirms it received it.
 
 ## System Configuration
-
-### Component Setup
+To set up the main system you will need a board, screen, emitter, receiver, and 3 databanks. 
 
 ## System Operation
 
 ### Creating a track
+Tracks are created on the ships and then broadcasted to the main system. Once you have created a track on the vehicle, use the broadcast track command with the system board active and the track will be sent to the system and can be used in future races.
 
 ### Creating a race
+A race must be created for racers to register. A race is a single event using a track that is saved. To create a race you need a track to use and a race key that you set which is unique to this race.
 
-### Operating a race
+First you will need to set the track. eg "set track Alioth Loop". Then you will need to create a race with the following command: "set key My Race Key". This race key is used by the racers to register on this race, they set this on the vehicle as a parameter and when they activate the board they will register on the race and await the start command.
+
+You can use the "list racers" command in Lua chat to list registered racers. When all racers are registered, the race is started by ALT+1 or typing "start race" in to Lua. This will broadcast the start command to the racers and the countdown will begin.
 
 ### Race Screens
 
