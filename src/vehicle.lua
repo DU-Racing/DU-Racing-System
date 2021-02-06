@@ -1,5 +1,5 @@
 -- Params
-raceID = "dutest" --export: sent from the central system to set the current race ID
+raceEventName = "dutest" --export: this should be set to match the raceEventName used on the central system
 teamName = "DU Racing" --export: The name of the team racing for
 colorRed = 0 --export: red color 0-255
 colorGreen = 0 --export: green color 0-255
@@ -10,11 +10,12 @@ testTrackKey = "Hover Kart Track" --export: Active track key, only used for test
 -- Organiser Params
 -- Current Track Key (the current race key to use for saving waypoints)
 organiserMode = false --export: if set to true this will allow new waypoints to be saved and exported
-radius = 20 --export: radius /this should not be left public long term. Broadcast this with the track info?
+waypointRadius = 20 --export: radius is used when creating a track to set waypoint distances
 lapSetting = 3 --export: Number of laps to use when making a new track
 
 -- Globals
 waypoints = {}
+radius = 20 -- default radius used when none set on track
 sectionTimes = {} -- stores the times for each section
 savedWaypoints = {} -- stores the waypoints when an organiser is plotting a race
 currentWaypointIndex = 0 -- keeps track of the current active waypoint index
@@ -423,24 +424,13 @@ function setTrackWaypoints(trackKey, trackJson)
     db.setStringValue(trackKey, trackJson)
 end
 
--- Get Race Track
-function getTrackWaypoints(trackKey)
-    -- Fetches the waypoints from the DB and decodes them
-    local track = db.getStringValue(trackKey)
-    -- Sets the number of laps for this track
-    track = json.decode(track)
-    remainingLaps = track['laps']
-    totalLaps = track['laps']
-    return track['waypoints']
-end
-
 -- Emit final times
 function sendFinalTimes()
     -- JSON encode the logged times and emit them to the stadium
     local times = {
         finalTime = round(endTime - startTime),
         lapTimes = lapTimes,
-        raceID = raceID,
+        raceEventName = raceEventName,
         racer = unit.getMasterPlayerId()
     }
 
@@ -459,7 +449,7 @@ function emitDataTillConfirmation(jsonStr)
     if jsonStr then
         local send = string.gsub(jsonStr, '"', '\\"')
         system.print('trying send: ' .. send)
-        emitter.send(raceID .. '-finish', send)
+        emitter.send(raceEventName .. '-finish', send)
     else
         system.print('json data is nil')
     end
@@ -481,7 +471,7 @@ end
 -- Save Track
 function saveTrack(trackName)
     -- Exports current saved waypoints to JSON
-    local track = {name = trackName, laps = lapSetting, waypoints = savedWaypoints}
+    local track = {name = trackName, radius = waypointRadius, laps = lapSetting, waypoints = savedWaypoints}
     if screen ~= nil then
         screen.setHTML(json.encode(track))
         system.print('Track data has been exported to the screen. Edit the HTML to copy it.')
@@ -512,7 +502,17 @@ end
 
 -- load track
 function loadTrack(name)
-    waypoints = getTrackWaypoints(name)
+
+    local track = db.getStringValue(name)
+    -- Sets the number of laps for this track
+    track = json.decode(track)
+    remainingLaps = track['laps']
+    totalLaps = track['laps']
+    waypoints = track['waypoints']
+    if track['radius'] ~= nil then
+        radius = track['radius']
+    end
+
     bestTime = db.getFloatValue(name..'-bestTime-'..unit.getMasterPlayerId())
     if bestTime then
         updateBestTime(bestTime)
@@ -907,9 +907,9 @@ function main()
         enterTestMode()
     else
         -- emit racer online if we have a race ID
-        if raceID ~= "" then
-            local startData = {raceID = raceID, racer = unit.getMasterPlayerId()}
-            emitter.send(raceID ..'-register', string.gsub(json.encode(startData), '"', '\\"'))
+        if raceEventName ~= "" then
+            local startData = {raceEventName = raceEventName, racer = unit.getMasterPlayerId()}
+            emitter.send(raceEventName ..'-register', string.gsub(json.encode(startData), '"', '\\"'))
         end
         gState = 'awaiting'
         gData.mainMessage = 'REGISTERING'

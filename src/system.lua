@@ -1,10 +1,9 @@
 -- Screen receiver system and stats display
 -- Official races require a race adjudicator that mans this board
-
 -- Params
 
 -- Race ID (Sets the active race ID used to receive and store stats, auto in future
-raceID = raceDB.getStringValue("activeRaceID")
+raceEventName = raceDB.getStringValue("activeRaceID")
 trackKey = raceDB.getStringValue("activeTrackID")
 activeTrack = nil
 trackName = "" -- Set from the databank when looking up track key
@@ -27,7 +26,7 @@ function handleTextCommandInput(text)
         system.print('"start race {ALT+1}" - starts the race and broadcasts start signal to racers')
         system.print('"end race {ALT+2}" - closes all further time submissions to this race')
         system.print('"set track track-name" - sets the active track name')
-        system.print('"set key your-race-key" - sets the active race key for the system')
+        system.print('"set raceEventName your-race-key" - sets the active race event name for the system')
         system.print('"list races" - lists all stored race keys')
         system.print('"list tracks" - lists all stored track keys')
         return true
@@ -45,7 +44,7 @@ function handleTextCommandInput(text)
 
     -- List racers
     if text == "list racers" then
-        local race = getRace(raceID)
+        local race = getRace(raceEventName)
         if race == nil then
             system.print("ERROR: No race found with this ID")
             return false
@@ -60,7 +59,7 @@ function handleTextCommandInput(text)
     -- Disqualify racer
     if text:find("disqualify racer ") then
         local dqf = string.gsub(text, "disqualify racer ", "")
-        local race = getRace(raceID)
+        local race = getRace(raceEventName)
         if race == nil then
             system.print("ERROR: No race found with this ID")
             return false
@@ -69,7 +68,7 @@ function handleTextCommandInput(text)
         for key, value in pairs(race["racers"]) do
             if race["racers"][key]["name"] == dqf then
                 race["racers"][key]["time"] = "DQF"
-                raceDB.setStringValue(raceID, json.encode(race))
+                raceDB.setStringValue(raceEventName, json.encode(race))
                 return system.print(dqf .. " has been disqualified")
             end
         end
@@ -77,11 +76,11 @@ function handleTextCommandInput(text)
     end
 
     -- Set race id
-    if text:find("set key ") then
-        raceID = string.gsub(text, "set key ", "")
-        raceDB.setStringValue("activeRaceID", raceID)
+    if text:find("set raceEventName ") then
+        raceEventName = string.gsub(text, "set raceEventName ", "")
+        raceDB.setStringValue("activeRaceID", raceEventName)
         buildRaceStatScreen()
-        return createRace(raceID)
+        return createRace(raceEventName)
     end
 
     -- List all saved race keys
@@ -111,7 +110,7 @@ function handleTextCommandInput(text)
             raceDB.setStringValue("activeTrackID", trackKey)
             system.print("Track key has been set")
             buildRaceStatScreen()
-            return createRace(raceID)
+            return createRace(raceEventName)
         end
         return system.print("Track key not found: " .. trackKey)
     end
@@ -258,11 +257,11 @@ function createRace(raceID)
     if trackKey == "" or trackKey == nil then
         return system.print("ERROR: No track set, use the 'set track' command")
     end
-    if raceID == "" or raceID == nil then
-        return system.print("ERROR: No race key, use the 'set key' command")
+    if raceEventName == "" or raceEventName == nil then
+        return system.print("ERROR: No race key, use the 'set raceEventName' command")
     end
     if raceDB.hasKey(raceID) == 0 then
-        local race = {raceID = raceID, trackKey = trackKey, status = "pending", racers = {}}
+        local race = {raceEventName = raceID, trackKey = trackKey, status = "pending", racers = {}}
         raceDB.setStringValue(raceID, json.encode(race))
         system.print("Created new race")
     else
@@ -297,7 +296,7 @@ function setTime(timesJSON)
 
     queueMessage(data['racer'] .. '-data-received', 'Received data')
 
-    local race = getRace(data["raceID"])
+    local race = getRace(data["raceEventName"])
     if not race then
         -- TODO: isn't this kind of an error we need to handle as well? I think in this case a ship assumes it's in a race that does not exist?
         return false 
@@ -314,8 +313,8 @@ function setTime(timesJSON)
             -- The racer exists on the board already if DQF, just no time is assigned to them
             if race["racers"][key]["time"] ~= "DQF" then
                 race["racers"][key]["time"] = data["finalTime"]
-                raceDB.setStringValue(data["raceID"], json.encode(race))
-                checkRankedTime(data["finalTime"], race["trackKey"], data["racer"], data["raceID"])
+                raceDB.setStringValue(data["raceEventName"], json.encode(race))
+                checkRankedTime(data["finalTime"], race["trackKey"], data["racer"], data["raceEventName"])
                 buildRaceStatScreen()
             end
         end
@@ -334,31 +333,31 @@ end
 function startRace()
     -- Emits a message to prepare, then emits a GO signal 3 seconds later
     -- Can control traffic lights
-    local race = getRace(raceID)
+    local race = getRace(raceEventName)
     if race == nil then
-        system.print("ERROR: No race found with this ID: " .. raceID)
+        system.print("ERROR: No race found with this ID: " .. raceEventName)
         return false
     end
     race["status"] = "started"
     -- save the race
-    raceDB.setStringValue(raceID, json.encode(race))
+    raceDB.setStringValue(raceEventName, json.encode(race))
     -- start the race
     system.print("Race Started!")
-    emitter.send(raceID, "start")
+    emitter.send(raceEventName, "start")
 end
 
 -- End race
 function endRace()
     -- Marks the race as complete, no more times will be accepted and the race is archived
-    local race = getRace(raceID)
+    local race = getRace(raceEventName)
     if race == nil then
         system.print("ERROR: No race found with this ID")
         return false
     end
     race["status"] = "ended"
     -- save the rcae
-    raceDB.setStringValue(raceID, json.encode(race))
-    emitter.send(raceID, "end")
+    raceDB.setStringValue(raceEventName, json.encode(race))
+    emitter.send(raceEventName, "end")
     return system.print("Race has ended")
 end
 
@@ -367,7 +366,7 @@ function registerRacer(registerJSON)
     -- Adds the playerId to the active race
     -- emits the track data
     local data = json.decode(registerJSON)
-    local race = getRace(data["raceID"])
+    local race = getRace(data["raceEventName"])
     if race == nil then
         return false
     end
@@ -388,7 +387,7 @@ function registerRacer(registerJSON)
     if racerExists == false then
         local racer = data["racer"]
         table.insert(race["racers"], {racer = racer, time = 0, name = system.getPlayerName(data["racer"])})
-        raceDB.setStringValue(data["raceID"], json.encode(race))
+        raceDB.setStringValue(data["raceEventName"], json.encode(race))
         system.print("New racer registered")
         -- update screen
         buildRaceStatScreen()
@@ -406,7 +405,7 @@ end
 -- Build current race screen
 function buildRaceStatScreen()
     -- Sets the screen up showing the registered racers in a list and their times in order (if set)
-    local race = getRace(raceID)
+    local race = getRace(raceEventName)
     if race == nil then
         return false
     end
@@ -450,11 +449,9 @@ end
 -- Sets up screen showing the race times for the specified track
 
 -- On start
---raceDB.clear()
-
 system.print("-==:: DU Racing System Online ::==-")
-system.print("Active Race Key: " .. raceID)
-system.print("Active Track Key: " .. trackKey)
+system.print("Active Race Event Name: " .. raceEventName)
+system.print("Active Track: " .. trackKey)
 
 if trackKey ~= nil and trackKey ~= "" then
     local trackJson = trackDB.getStringValue(trackKey)
@@ -462,13 +459,10 @@ if trackKey ~= nil and trackKey ~= "" then
     trackName = activeTrack["name"]
 end
 
-if raceID ~= nil and raceID ~= "" then
-    createRace(raceID)
+if raceEventName ~= nil and raceEventName ~= "" then
+    createRace(raceEventName)
 else
-    system.print("SYSTEM: No race ID set, type 'set key your-key-here' to set one")
+    system.print("SYSTEM: No raceEventName set, type 'set raceEventName your-name-here' to set one")
 end
 
 buildRaceStatScreen()
-
-
-

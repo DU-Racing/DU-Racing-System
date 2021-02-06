@@ -15,11 +15,11 @@ if channel == "fdu-centralsplit" then
     end
 end
 
-if channel == raceID .. "-register" then
+if channel == raceEventName .. "-register" then
     registerRacer(message)
 end
 
-if channel == raceID .. "-finish" then
+if channel == raceEventName .. "-finish" then
     setTime(message)
 end
 

@@ -23,7 +23,7 @@ if channel == uid .. "-splitmsg" or channel == "dur-splitmsg" then
     end
 end
 
-if channel == raceID then
+if channel == raceEventName then
     if message == "start" then
         startCountdown()
     end
