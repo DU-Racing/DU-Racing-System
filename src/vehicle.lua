@@ -1,17 +1,17 @@
 -- Params
-raceEventName = "dutest" --export: this should be set to match the raceEventName used on the central system
+raceEventName = "dutest" --export: This should be set to match the raceEventName used on the central system
 teamName = "DU Racing" --export: The name of the team racing for
-colorRed = 0 --export: red color 0-255
-colorGreen = 0 --export: green color 0-255
-colorBlue = 255 --export: blue color 0-255
-testRace = false --export: if set to true this will not emit times but allow the course to be run
-testTrackKey = "Hover Kart Track" --export: Active track key, only used for test races
+colorRed = 0 --export: Change the vehicle light color - red 0-255
+colorGreen = 0 --export: Change the vehicle light color - green 0-255
+colorBlue = 255 --export: Change the vehicle light color - blue 0-255
+testRace = false --export: If checked this will allow you to test a track that is saved 
+testTrackName = "Hover Kart Track" --export: Active track name, only used for test races
 
 -- Organiser Params
 -- Current Track Key (the current race key to use for saving waypoints)
-organiserMode = false --export: if set to true this will allow new waypoints to be saved and exported
-waypointRadius = 20 --export: radius is used when creating a track to set waypoint distances
-lapSetting = 3 --export: Number of laps to use when making a new track
+orgMode = false --export: If checked you can create new tracks
+orgWaypointRadius = 20 --export: Set radius to the distance in metres from the waypoint location to clear it
+orgLapCount = 3 --export: Set the number of laps to use when creating a new track
 
 -- Globals
 waypoints = {}
@@ -58,7 +58,7 @@ function handleTextCommandInput(text)
     end
 
     if text == 'add waypoint' then
-        if organiserMode then
+        if orgMode then
             return saveWaypoint()
         else
 			system.print('Waypoints can only be saved in organizer mode.')
@@ -351,7 +351,7 @@ function endRace()
 end
 
 function updateBestTime(yourTime) 
-    db.setFloatValue(testTrackKey .. '-bestTime-'..unit.getMasterPlayerId(), (finishTime) )
+    db.setFloatValue(testTrackName .. '-bestTime-'..unit.getMasterPlayerId(), (finishTime) )
     system.updateData(deltaTimeRef, '{"value": "' .. formatTime(yourTime) .. '"}')
 end 
 
@@ -471,7 +471,7 @@ end
 -- Save Track
 function saveTrack(trackName)
     -- Exports current saved waypoints to JSON
-    local track = {name = trackName, radius = waypointRadius, laps = lapSetting, waypoints = savedWaypoints}
+    local track = {name = trackName, radius = orgWaypointRadius, laps = orgLapCount, waypoints = savedWaypoints}
     if screen ~= nil then
         screen.setHTML(json.encode(track))
         system.print('Track data has been exported to the screen. Edit the HTML to copy it.')
@@ -647,7 +647,7 @@ function updateOverlay()
         '<div class="info">' ..
         '<span class="label">Team Name: </span><span class="value">' ..
         teamName .. 
-        '&nbsp;&nbsp;<span style="magrin-left: 10px;display: inline-block; width: 10px; height: 10px; background: rgb(' .. colorRed .. ', ' .. colorGreen .. ', ' .. colorBlue .. ');"></span>' ..
+        '&nbsp;&nbsp;<span style="margin-left: 10px;display: inline-block; width: 10px; height: 10px; background: rgb(' .. colorRed .. ', ' .. colorGreen .. ', ' .. colorBlue .. ');"></span>' ..
         '</span>' ..
         '</div>' ..
         '<div class="info">' ..
@@ -831,11 +831,6 @@ function addStaticWidget(parentPanel, value, label, unit)
     system.addDataToWidget(tempData, tempWidget)
     return tempData
 end
---should be called by the unit.update() filter
-function mainUpdate()
-    checkWaypoint() --this might even go in system.flush as update might miss smth at high speeds
-    updateTime()
-end
 
 function updateTime()
     if not raceStarted then
@@ -845,7 +840,6 @@ function updateTime()
     system.updateData(totalTimeRef, '{"value": "' .. formatTime(now - startTime) .. '"}')
     system.updateData(lapTimeRef, '{"value": "' .. formatTime(now - lapTime) .. '"}')
 end
-
 
 function formatTime(seconds)
     local function leadingZero(num)
@@ -890,9 +884,9 @@ function setDefaults()
     end
 end
 
-function main()
+function onStart()
     setDefaults()
-    if organiserMode then
+    if orgMode then
         trackName = 'TBC'
         newRaceInfoPanel = system.createWidgetPanel('New Race')
         gState = 'organiser'
@@ -926,12 +920,12 @@ end
 function enterTestMode()
     print('-==:: DU Racing Test Mode ::==-')
     -- Check they have an active track
-    if testTrackKey == '' then
+    if testTrackName == '' then
         doError('No test track key has been set')
         return false
     end
 
-    loadTrack(testTrackKey)
+    loadTrack(testTrackName)
 
     print('Type "start" in lua console or hit {ALT+1} to start the test race', false)
     gData.mainMessage = 'Press ALT+1 to begin'
@@ -961,5 +955,5 @@ function print(msg, doToast)
 end
 
 unit.hide()
-main()
+onStart()
 

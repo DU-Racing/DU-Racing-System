@@ -1,3 +1,7 @@
+if debugMode then
+    system.print(message)
+end
+
 if channel == "fdu-centralsplit" then
     mess = string.gsub(message, "|", '\\"')
     local part = json.decode(mess)

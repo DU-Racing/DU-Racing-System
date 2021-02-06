@@ -10,6 +10,7 @@ trackName = "" -- Set from the databank when looking up track key
 messageParts = {}
 messageQueue = {}
 consumerStarted = false
+debugMode = false
 
 -- Do not adjust version
 version = "1.0"
@@ -27,8 +28,8 @@ function handleTextCommandInput(text)
         system.print('"end race {ALT+2}" - closes all further time submissions to this race')
         system.print('"set track track-name" - sets the active track name')
         system.print('"set raceEventName your-race-key" - sets the active race event name for the system')
-        system.print('"list races" - lists all stored race keys')
-        system.print('"list tracks" - lists all stored track keys')
+        system.print('"list races" - lists all stored race event names')
+        system.print('"list tracks" - lists all stored track names')
         return true
     end
 
@@ -46,7 +47,7 @@ function handleTextCommandInput(text)
     if text == "list racers" then
         local race = getRace(raceEventName)
         if race == nil then
-            system.print("ERROR: No race found with this ID")
+            system.print("ERROR: No race event name found with this ID")
             return false
         end
         local racers = ""
@@ -61,7 +62,7 @@ function handleTextCommandInput(text)
         local dqf = string.gsub(text, "disqualify racer ", "")
         local race = getRace(raceEventName)
         if race == nil then
-            system.print("ERROR: No race found with this ID")
+            system.print("ERROR: No race event name found with this ID")
             return false
         end
         local racers = ""
@@ -96,8 +97,8 @@ function handleTextCommandInput(text)
     end
 
     -- export race
-    if text:find("export race ") then
-        local exportKey = string.gsub(text, "export race ", "")
+    if text:find("export raceEventName ") then
+        local exportKey = string.gsub(text, "export raceEventName ", "")
         local raceExport = raceDB.getStringValue(exportKey)
         screen.setHTML(raceExport)
         return system.print("The race has been exported to the screen HTML content")
@@ -108,11 +109,11 @@ function handleTextCommandInput(text)
         trackKey = string.gsub(text, "set track ", "")
         if trackDB.hasKey(trackKey) == 1 then
             raceDB.setStringValue("activeTrackID", trackKey)
-            system.print("Track key has been set")
+            system.print("Track name has been set")
             buildRaceStatScreen()
             return createRace(raceEventName)
         end
-        return system.print("Track key not found: " .. trackKey)
+        return system.print("Track name not found: " .. trackKey)
     end
 
     -- list saved tracks
@@ -128,6 +129,7 @@ function handleTextCommandInput(text)
     end
 
     system.print("SYSTEM: I Can't... " .. text)
+    system.print('Type "help" for a list of commands')
 end
 
 function consumeQueue()
@@ -445,24 +447,35 @@ function buildRaceStatScreen()
     end
 end
 
--- Build race time stats page
--- Sets up screen showing the race times for the specified track
-
 -- On start
-system.print("-==:: DU Racing System Online ::==-")
-system.print("Active Race Event Name: " .. raceEventName)
-system.print("Active Track: " .. trackKey)
+function onStart() 
+    local startError
+    system.print('-==:: DU Racing System Online ::==-')    
+    system.print('Active Race Event Name: ' .. raceEventName)
+    system.print('Active Track: ' .. trackKey)
+    system.print('Type "help" to get a list of commands.')
 
-if trackKey ~= nil and trackKey ~= "" then
-    local trackJson = trackDB.getStringValue(trackKey)
-    activeTrack = json.decode(trackJson)
-    trackName = activeTrack["name"]
+    if trackKey ~= nil and trackKey ~= "" then
+        local trackJson = trackDB.getStringValue(trackKey)
+        activeTrack = json.decode(trackJson)
+        trackName = activeTrack["name"]
+    else 
+        startError = 'No active track has been set, type "set track your-track-here" to set one. '
+    end
+
+    if raceEventName ~= nil and raceEventName ~= "" then
+        createRace(raceEventName)
+    else
+        startError = startError .. 'No raceEventName set, type "set raceEventName your-name-here" to set one'
+    end
+
+    if startError then
+        system.print(startError)
+    end
+
+    -- Update race screen
+    buildRaceStatScreen()
 end
 
-if raceEventName ~= nil and raceEventName ~= "" then
-    createRace(raceEventName)
-else
-    system.print("SYSTEM: No raceEventName set, type 'set raceEventName your-name-here' to set one")
-end
+onStart()
 
-buildRaceStatScreen()
