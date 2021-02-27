@@ -14,6 +14,7 @@ orgWaypointRadius = 20 --export: Set radius to the distance in metres from the w
 orgLapCount = 3 --export: Set the number of laps to use when creating a new track
 
 -- Globals
+myDebug = true --true for getting debug printouts
 waypoints = {}
 radius = 20 -- default radius used when none set on track
 sectionTimes = {} -- stores the times for each section
@@ -42,88 +43,138 @@ duRacingLogo =
 
 -- Functions
 function handleTextCommandInput(text)
-    print('Command: ' .. text, false)
-
-    -- Help
-    if text == 'help' then
-        -- Outputs all commands with a description
+    local commands = {
+      help = function()
         system.print('-==:: DU Racing Command Help ::==-')
-        system.print('"add waypoint {ALT+2}" - adds the current position to the track waypoints')
-        system.print('"save track [track name]" - saves the stored waypoints to screen')
-        system.print('"list tracks" - lists all track keys saved in the databank')
-        system.print('"broadcast track [track name]" - broadcasts track to central system')
-        system.print('"export track [track name]" - exports the track JSON to the screen')
-        system.print('"start {ALT+1}" - starts the test race with the set track key')
-        return true
-    end
-
-    if text == 'add waypoint' then
+        system.print('"addWaypoint" or {ALT+2} - When in organizer mode, adds the current core position to the track waypoints.')
+        system.print('"saveTrack(track name, lap count)" - When in organizer mode, saves the created waypoints with the given track name and lap count to the local databank.')
+        system.print('"broadcastTrack(track name)" - When in organizer mode, broadcasts the prior saved track to a central system.')
+        system.print('"listTracks" - Lists all track keys saved in the connected databank.')
+        system.print('"exportTrack(track name)" - When in organizer mode, exports the track JSON to the screen.')
+        system.print('"start" or {ALT+1} - When in test mode starts the test race with the set track.')
+      end,
+      addWaypoint = function()
         if orgMode then
-            return saveWaypoint()
+          saveWaypoint()
         else
-			system.print('Waypoints can only be saved in organizer mode.')
-			return false
-		end
-    end
-    if text == 'countdown' then
-        return startCountdown()
-    end
-    if text == 'start' then
-        if testRace then
-			return startCountdown()
-        else
-			doError('Races can only be started manually when in test mode')
-			return false
-		end
-    end
-
-    if text:find('save track ') then
-        local trackName = string.gsub(text, 'save track ', '')
-        if trackName ~= '' then
-            return saveTrack(trackName)
-        else
-			system.print('A track name must be used when saving a track. eg "save track Alioth Loop"')
-			return false
-		end
-    end
-
-    if text == 'list tracks' then
-        local keys = db.getKeys()
-		if keys ~= '[]' then
-			keys = json.decode(db.getKeys())
-			local out = ''
-			for key, value in pairs(keys) do
-				if value ~= 'activeRace' then
-					out = value .. ', ' .. out
-				end
-			end
-			return system.print(out)
-		else
-			system.print('No tracks saved.')
-		end
-    end
-
-    if text:find('export track ') then
-        local trackName = string.gsub(text, 'export track ', '')
-        if trackName ~= '' then
-            return exportTrack(trackName)
-        else
-			system.print('A track name must be used when exporting a track. eg "export track Alioth Loop"')
-            return false
-		end
-    end
-
-    if text:find('broadcast track ') then
-        local trackName = string.gsub(text, 'broadcast track ', '')
-        if trackName ~= '' then
-			return broadcastTrack(trackName)
-        else
-			system.print('A track name must be used when broadcasting a track. eg "broadcast track Alioth Loop"')
-            return false
+          doError('Waypoints can only be saved in organizer mode.')
         end
-    end
+      end,
+      countdown = function()
+        startCountdown()
+      end,
+      start = function()
+        if testRace then
+          startCountdown()
+        else
+          doError('You can only start a race from a vehicle if you are in test mode.')
+        end
+      end,
+      listTracks = function()
+        local keys = db.getKeys()
+        if keys ~= '[]' then
+          keys = json.decode(keys)
+          local out = ''
+          for key, value in pairs(keys) do
+            if value ~= 'activeRace' then
+              out = value .. ', ' .. out
+            end
+          end
+          system.print(out)
+        else
+          system.print('No tracks saved on this Databank.')
+        end
+      end,
+      saveTrack = function(trackNameLapCountWaypointRadius)
+        local trackName, lapCount, waypointRadius
+        local paramSeperation = string.find(trackNameLapCountWaypointRadius,',')
+        if paramSeperation then
+          trackName = string.sub(trackNameLapCountWaypointRadius,1,paramSeperation - 1)
+          local LapCountWaypointRadius = string.sub(trackNameLapCountWaypointRadius,paramSeperation + 1,#trackNameLapCountWaypointRadius)
+          paramSeperation = string.find(LapCountWaypointRadius,',')
+          if paramSeperation then
+            lapCount = tonumber(string.sub(LapCountWaypointRadius,1,paramSeperation - 1))
+            lapCount = type(lapCount) == 'number' and math.ceil(lapCount) or false
+            waypointRadius = tonumber(string.sub(LapCountWaypointRadius,paramSeperation + 1,#LapCountWaypointRadius))
+            waypointRadius = type(waypointRadius) == 'number' and waypointRadius or false
+          end
+        end
+        
+        local err = ''
+        if not savedWaypoints[1] then err = 'No waypoints created that could be saved for a track. ' end
+        if not trackName or trackName=='' then err = err..'A track can not be saved without a name. ' end
+        if not lapCount or not (lapCount > 0) then err = err..'Lap Count must be an integer greater zero. ' end
+        if not waypointRadius or not (waypointRadius > 0) then err = err..'Waypoint radius must be a number greater zero.' end
+        if err ~= '' then
+          doError(err)
+        else
+          -- Exports current saved waypoints to JSON
+          local track = {name = trackName, radius = waypointRadius, laps = lapCount, waypoints = savedWaypoints}
+          db.setStringValue(trackName, json.encode(track))
+          system.print([[The track has been saved to the local databank. 
+          Change to test mode to try it out. 
+          Type "broadcastTrack(trackName)" to save the track on a central system.]])
+        end
+      end,
+      exportTrack = function(trackName)
+        if trackName ~= '' then
+          local track = db.getStringValue(trackName)
+          local err = ''
+          if not track then err = 'No track found with this track name. ' end
+          if not screen then err = err..'No screen connected for exporting.' end
+          if err ~= '' then
+            doError(err)
+          else
+            screen.setHTML(track)
+            system.print('Track has been exported to the screen HTML.')
+          end
+        else
+         doError('The track name must be given to export a track.')
+        end
+      end,
+      broadcastTrack = function(trackName)
+        if trackName ~= '' then
+          local track = db.getStringValue(trackName)
+          if not track then
+              doError('No track with this name is saved on the databank.')
+          else
+            splitBroadcast('save-track', 'fdu-centralsplit', track)
+            system.print('Track "'..trackName..'" has been broadcasted to the central system.')
+          end
+        else
+          doError('A track name must be used to broadcast a track.')
+        end
+      end
+    }
 
-    system.print("I can't... "..text)
+    if myDebug then print('Entered Command: "'..text..'"', false) end
+    
+    local paramStart = string.find(text,'%(')
+    local cmd = paramStart and string.sub(text,1,paramStart-1) or text
+    --local params = {}
+    local paramsString = ''
+    
+    if paramStart then
+      local paramEnd = string.find(text,'%)')
+      paramEnd = paramEnd or #text+1--we assume someone just forgot the closing ) and try to process anyway
+      paramsString = string.sub(text,paramStart+1,paramEnd-1)
+    end
+      --[[if paramsString and paramsString ~= '' then
+        local found = true
+        while found do
+          found = string.find(paramsString,',')
+          if found then
+            local param = string.sub(paramsString,1,found-1)
+            table.insert(params,param)
+            string.gsub(paramsString,param..',','')
+          end
+        end
+      end]]
+      if commands[cmd] then
+        commands[cmd](paramsString)
+      else
+        doError('Following command could not be executed: "'..text..'"')
+      end
 end
 
 -- Message part system functions
@@ -468,25 +519,6 @@ function saveWaypoint()
     system.print(curr)
 end
 
--- Save Track
-function saveTrack(trackName)
-    -- Exports current saved waypoints to JSON
-    local track = {name = trackName, radius = orgWaypointRadius, laps = orgLapCount, waypoints = savedWaypoints}
-    if screen ~= nil then
-        screen.setHTML(json.encode(track))
-        system.print('Track data has been exported to the screen. Edit the HTML to copy it.')
-    else
-        system.print('Attach a screen to the board to export the JSON.')
-    end
-
-    system.print(
-        'The data has been saved to the database, exit organiser mode, '..
-        'set the active track as the name of the saved track and enter test mode to try it out.'
-    )
-
-    db.setStringValue(trackName, json.encode(track))
-end
-
 -- save broadcasted track
 function saveBroadcastedTrack(str)
     local track = json.decode(str)
@@ -524,20 +556,6 @@ function loadTrack(name)
     trackName = name
 end
 
--- export track
-function exportTrack(trackName)
-    local track = db.getStringValue(trackName)
-    if not track then
-        doError('ERROR: Track not found')
-        return false
-    end
-    if screen then
-        screen.setHTML(track)
-        return system.print('Track has been exported to the screen HTML')
-    end
-    return system.print('No screen found.')
-end
-
 function toggleTestMode()
     testRace = ~testRace
     if testRace then
@@ -545,17 +563,6 @@ function toggleTestMode()
     else
         exitTestMode()
     end
-end
-
--- broadcast track
-function broadcastTrack(trackName)
-    local track = db.getStringValue(trackName)
-    if track == nil then
-        system.print('ERROR: Track not found')
-        return false
-    end
-    splitBroadcast('save-track', 'fdu-centralsplit', track)
-    return system.print('Track has been broadcasted to central system')
 end
 
 --UI stuff
@@ -885,6 +892,7 @@ function setDefaults()
 end
 
 function onStart()
+    unit.hide()
     setDefaults()
     if orgMode then
         trackName = 'TBC'
@@ -954,6 +962,5 @@ function print(msg, doToast)
     return system.print(msg), doToast and toast(msg)
 end
 
-unit.hide()
 onStart()
 
