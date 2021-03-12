@@ -54,7 +54,7 @@ if updateWaypointDesired then
     if myDebug then system.print('Next waypoint: '..xyzPosition(currentWaypoint.x, currentWaypoint.y, currentWaypoint.z)) end
 end
 if consumerStartDesired then
-  unit.setTimer('consumeMsgQueue', 5)
+  unit.setTimer('consumeMsgQueue', 1)
   consumerStartDesired = false
 end
 
