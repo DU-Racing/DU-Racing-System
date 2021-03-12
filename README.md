@@ -1,6 +1,44 @@
 # du-racing
 This script allows any race track owner or event organiser set up and manage a race system that has many features to make managing races over any distance possible with multiple racers.
 
+## Instructions
+
+* How do I set the DU-Racing System up?
+* Very easy would be promised too much, but fairly easy might do (step-by-step):
+
+* 1) Place a core (type doesn't matter) for your start/finish.
+* 2) Place 1 programming board, 3 databanks, 1 emitter, 1 receiver, 1 screen (any size, M+ recommended) on the core.
+* 3) Copy the "system" code.
+* 4) Paste it onto the programming board, by rightclick > advanced > paste Lua configuration from clipboard.
+* 5) Open the programming boards code by using "ctrl + L" or by rightclick > advanced > edit Lua script
+* 6) Look on the named slots on the left and connect the elements listed (step 2) in the order, top to bottom.
+
+* 7) Place 1 programming board, 1 databank, 1 emitter, 1 receiver on a ship that you want to use for racing.
+* 8) Copy the "vehicle" code.
+* 10) Paste it onto the programming board, by rightclick > advanced > paste Lua configuration from clipboard.
+* 11) Open the programming boards code by using "ctrl + L" or by rightclick > advanced > edit Lua script. Here the slots named "light" are optional. They require lights placed on the vehicle and are recommended for when using multiple of the same ship in one race. Using the lights each race can set a color for his racer.
+
+* How do I use the DU-Racing System?
+
+* 1) Start on the vehicle. Go to the Lua parameters by rightclick > advanced > edit Lua parameters.
+* 2) Activate "orgMode" by using the check-box on the right.
+* 3) Start the programming board.
+* 4) To record a track to later race on it, Press "alt+2" or type "addWaypoint" where you want to add a waypoint. The first one should be the startpoint, last one finish. Try not to overdo it here.
+* 5) When done with the waypoints, type "saveTrack(your track name, lap count, waypoint radius)" in your Lua-chat. This will save the track on the local vehicle databank. Waypoint radius is the radius a racer needs to get within in order to clear the waypoint.
+* 5.1) OPTIONAL: Deactivate the vehicle programming board, edit lua parameters, deactivate org mode, activate testMode. Set your track name for the testTrack parameter. Start the programming board. You can now test the track. To do so, press "alt+1" or type "startRace" in Lua-chat to initiate the start sequence.
+* 6) Activate the programming board on the start/finish.
+* 7) Type "broadcastTrack(your track name)" in the Lua-chat in order to transfer the track data. This can also be done at a later point as the data is saved on the vehicle databank meanwhile.
+* 8) Deactivate the vehicle programming board (give some secs after the previous step here for the DU emitters/receivers to catch up :wink: )
+* 9) Type "setTrack(your track name)" in the Lua-chat to set your created track as active.
+* 10) Type "setRaceEvent(your event name)" in the Lua-chat to set your active event. The event name is simply made up by you. It allows to have multiple races on the same track with different or same racers with different lap times taken each time.
+* 11) Restart the start/finish programming board (you should see your event name and track name on the screen).
+* 12) On the vehicle go to Lua parameters, deactivate orgMode or testMode if necessary. Set your event Name for the eventName Parameter at the very top.
+* 13) Start vehicle board.
+* 14) The vehicle should now automatically register to the race. When done so, the name without a given time shows up on the screen.
+* 15) Register all racers you want to the race.
+* 16) The one having the start/fninsh board active types "startRace" in his Lua-chat. This initiates the start sequence. (No need to stay close to the board after the sequence is started)
+* 17) After everyone finished the race, the one having the start/fninsh board active in the beginning restarts it (unload issues DU^^). Now the times from the racers automatically register back to the before started race and you have a winner!
+* 
 ## Features
 
 * Organiser mode - Plot the waypoints while flying around the track, save them locally and test it, then broadcast it to the central system.
