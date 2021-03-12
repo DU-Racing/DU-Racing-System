@@ -168,7 +168,7 @@ MSG = {
     table.insert(MSG.queue, {channel = channel, message = message}) --, time = system.getTime()})
     if not consumerStarted then
       MSG:consumeQueue() --we can send the first msg instantly.
-      unit.setTimer('consumeMsgQueue', 5)
+      unit.setTimer('consumeMsgQueue', 1)
       consumerStarted = true
     end
   end,
