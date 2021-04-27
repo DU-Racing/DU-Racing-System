@@ -24,7 +24,7 @@ This script allows any race track owner or event organiser set up and manage a r
 * 2) Activate "orgMode" by using the check-box on the right.
 * 3) Start the programming board.
 * 4) To record a track to later race on it, Press "alt+2" or type "addWaypoint" where you want to add a waypoint. The first one should be the startpoint, last one finish. Try not to overdo it here.
-* 5) When done with the waypoints, type "saveTrack(your track name, lap count, waypoint radius)" in your Lua-chat. This will save the track on the local vehicle databank. Waypoint radius is the radius a racer needs to get within in order to clear the waypoint.
+* 5) When done with the waypoints, type "saveTrack(your track name, lap count, waypoint radius)" in your Lua-chat. This will save the track on the local vehicle databank. Waypoint radius is the radius a racer needs to get within in order to clear the waypoint. Example: "saveTrack(MyTrack,5,40)"
 * 5.1) OPTIONAL: Deactivate the vehicle programming board, edit lua parameters, deactivate org mode, activate testMode. Set your track name for the testTrack parameter. Start the programming board. You can now test the track. To do so, press "alt+1" or type "startRace" in Lua-chat to initiate the start sequence.
 * 6) Activate the programming board on the start/finish.
 * 7) Type "broadcastTrack(your track name)" in the Lua-chat in order to transfer the track data. This can also be done at a later point as the data is saved on the vehicle databank meanwhile.
@@ -107,6 +107,13 @@ A race must be created for racers to register. A race is a single event using a 
 First you will need to set the track. eg "set track Alioth Loop". Then you will need to create a race with the following command: "set key My Race Key". This race key is used by the racers to register on this race, they set this on the vehicle as a parameter and when they activate the board they will register on the race and await the start command.
 
 You can use the "list racers" command in Lua chat to list registered racers. When all racers are registered, the race is started by ALT+1 or typing "start race" in to Lua. This will broadcast the start command to the racers and the countdown will begin.
+
+## Databanks LOD
+
+XS core = 21m 
+S  core = 43m 
+M  core = 75m 
+L  core = 150m
 
 ### Race Screens
 
