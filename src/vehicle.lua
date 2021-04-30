@@ -3,17 +3,17 @@
 utils = require('cpml/utils')
 
 -- Params
-raceEventName = "Your event name here" --export: This should be set to match the raceEventName used on the central system (keep the "")
+raceEventName = "Enter Event name" --export: This should be set to match the raceEventName used on the central system (keep the "")
 
 orgMode = false --export: If checked you can create new tracks and broadcast them to a central system
 
 testRace = false --export: If checked this will allow you to test a track that is saved 
-testTrackName = "Enter track name for test here" --export: Active track name, only used for test races (keep the "")
+testTrackName = "Enter Track Name" --export: Active track name, only used for test races (keep the "")
 
 teamName = "Your team name here" --export: The name of the team racing for
-teamColorRed = 0 --export: Change the vehicle light color - red 0-255
-teamColorGreen = 0 --export: Change the vehicle light color - green 0-255
-teamColorBlue = 255 --export: Change the vehicle light color - blue 0-255
+teamColorRed = 255 --export: Change the vehicle light color - red 0-255
+teamColorGreen = 255 --export: Change the vehicle light color - green 0-255
+teamColorBlue = 205 --export: Change the vehicle light color - blue 0-255
 
 -- Globals
 myDebug = false --true for getting debug Printouts
@@ -234,7 +234,12 @@ function nextWaypoint()
   
   if not nextPoint then -- no more waypoints?
     table.insert(lapTimes, utils.round(now - lapTime,.001))
-
+    if(prevEnd==nil) then
+      prevEnd = startTime
+    end
+    local thisLapTime = now - prevEnd 
+    prevEnd=now
+    updateBestTime(thisLapTime)
     -- check laps
     remainingLaps = remainingLaps - 1
     myPrint('Lap complete.', true)
@@ -281,6 +286,7 @@ function startRace()
 
     -- set start time and first split time
     startTime = system.getTime()
+    prevEnd = nil
     lapTime, splitTime = startTime, startTime
   end
 end
@@ -325,10 +331,22 @@ function countdownReady1()
   gState = 'red1'
   myPrint('2', true)
 end
-function countdownSet()
+function countdownSet() 
   gState = 'red'
   unit.stopTimer('countSet')
   myPrint('1', true)
+end
+
+function updateBestTime(time)
+  debugPrint('bestTime'..formatTime(bestTime))
+  debugPrint('newTime'..formatTime(time))
+  if bestTime == nil or bestTime ==0 or time < bestTime then --store personal track record
+    debugPrint('Best time logic')
+    db.setStringValue(trackName..'-bestTime-'..masterId, json.encode(time))
+    debugPrint('ref'..tostring(deltaTimeRef))
+    bestTime = time   
+    myPrint('New personal track record! '..formatTime(time), true)
+  end
 end
 -- End Race
 function endRace()
@@ -345,13 +363,6 @@ function endRace()
   raceStarted = false
   
   if testRace == false then
-    if myDebug then system.print('Personal track record @: '..tostring(bestTime)) end
-    if bestTime == nil or finishTime < bestTime then --store personal track record
-      db.setFloatValue(trackName..'-bestTime-'..masterId, finishTime)
-      system.updateData(deltaTimeRef, '{"value": "' .. formatTime(finishTime) .. '"}')
-      myPrint('New personal track record! '..formatTime(finishTime), true)
-    end
-    
     sendFinalTimes() -- Emit this data
   end
 end
@@ -527,7 +538,14 @@ end
 
 -- load track
 function loadTrack(name)
-  
+  if db.hasKey(name..'-bestTime-'..masterId) then
+        
+    bestTime = json.decode(db.getStringValue(name..'-bestTime-'..masterId))
+    debugPrint('Current best time'..tostring(bestTime))
+  else
+    bestTime = nil --needs to stay in case we start a new race without restarting the pb
+    debugPrint('No best time')
+  end
   if db.hasKey(name) then
     local track = db.getStringValue(name)
     if track ~= nil and track ~= '' then
@@ -540,11 +558,7 @@ function loadTrack(name)
         radius = track['radius']
       end
 
-      if db.hasKey(name..'-bestTime-'..masterId) then
-        bestTime = db.getFloatValue(name..'-bestTime-'..masterId)
-      else
-        bestTime = nil --needs to stay in case we start a new race without restarting the pb
-      end
+      
       if not waypoints then
         errorPrint('Could not load track. No track waypoints found.')
         return false
@@ -679,7 +693,7 @@ function initOverlay()
   raceInfoPanel = system.createWidgetPanel('DU Racing Clock')
   lapTimeRef = addStaticWidget(raceInfoPanel, '0:00:00.000', 'Lap Time', '')
   totalTimeRef = addStaticWidget(raceInfoPanel, '0:00:00.000', 'Total Time', '')
-  deltaTimeRef = addStaticWidget(raceInfoPanel, '--:--:--.---', 'Your Best Lap', '')
+  deltaTimeRef = addStaticWidget(raceInfoPanel, '--:--:--.---', 'Best Lap', '')
 
   --set up styles
   styles =
@@ -829,10 +843,15 @@ function updateTime()
     local now = system.getTime()
     system.updateData(totalTimeRef, '{"value": "' .. formatTime(now - startTime) .. '"}')
     system.updateData(lapTimeRef, '{"value": "' .. formatTime(now - lapTime) .. '"}')
+    system.updateData(deltaTimeRef, '{"value": "' .. formatTime(bestTime) .. '"}')
   end
 end
 
 function formatTime(seconds)
+  
+  if(seconds == nil)then
+    return '--:--:--.---'
+  end 
   local function leadingZero(num)
     num = tonumber(num)
 		return num < 10 and '0'..num or num
@@ -847,7 +866,6 @@ function formatTime(seconds)
     end 
     return num
   end
-
   local secondsRemaining = seconds
   local hours = math.floor(secondsRemaining / 3600)
   secondsRemaining = modulus(secondsRemaining, 3600)
@@ -942,6 +960,12 @@ end
 function errorPrint(msg)
   myPrint('ERROR: ' .. msg, true)
   gState = 'error'
+end
+
+function debugPrint(msg)
+  if(myDebug) then
+    system.print(msg)
+  end
 end
 
 --Helper function to wrap system.print().  If second argument is true, it will also call a toast with the same message.
