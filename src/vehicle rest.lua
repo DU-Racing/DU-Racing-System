@@ -11,6 +11,7 @@ unit.stopTimer('raceStartCooldown')
 countdownReady5()
 currentWaypointIndex = 1
 currentWaypoint = vec3(waypoints[1][1], waypoints[1][2], waypoints[1][3])
+radius = waypoints[1][4]
 updateWaypointMarker()
 
 --TICK 'count4'
@@ -45,13 +46,13 @@ handleTextCommandInput("start")
 --updateTime()
 if updateOverlayDesired then
 	updateOverlay()
-    updateOverlayDesired = false
+  updateOverlayDesired = false
 end
 if updateWaypointDesired then
-    updateWaypointDesired = false
-    updateWaypointMarker()
+  updateWaypointDesired = false
+  updateWaypointMarker()
     
-    if myDebug then system.print('Next waypoint: '..xyzPosition(currentWaypoint.x, currentWaypoint.y, currentWaypoint.z)) end
+  if myDebug then system.print('Next waypoint: '..xyzPosition(currentWaypoint.x, currentWaypoint.y, currentWaypoint.z)) end
 end
 if consumerStartDesired then
   unit.setTimer('consumeMsgQueue', 1)
