@@ -6,3 +6,6 @@ MSG:consumeQueue()
 
 --INPUT TEXT (*)
 handleTextCommandInput(text)
+
+--ACTION START 'option1'
+handleTextCommandInput("startRace")
