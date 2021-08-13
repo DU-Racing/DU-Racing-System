@@ -16,7 +16,7 @@ teamColorGreen = 255 --export: Change the vehicle light color - green 0-255
 teamColorBlue = 205 --export: Change the vehicle light color - blue 0-255
 
 -- Globals
-myDebug = false --true for getting debug Printouts
+myDebug = true --true for getting debug Printouts
 waypoints = {}
 radius = 20 -- Default radius. Can be changed and get's saved for every individual waypoint
 sectionTimes = {} -- stores the times for each section
@@ -387,7 +387,8 @@ MSG = {
   
   consumeQueue = function()
     MSG.lastSendChannel = MSG.queue[1]['channel']
-    emitter.send(MSG.queue[1]['channel'], MSG.queue[1]['message'])
+    debugPrint('Broadcasting message'..MSG.queue[1]['message'])
+    emitter.broadcast(MSG.queue[1]['message'])
   end,
 
   unqueueMessage = function()
@@ -430,16 +431,15 @@ MSG = {
     local index = 1
     local dataParts, dataPartsCount = split(data, 250)
     for lineId, dataContent in ipairs(dataParts) do
-      local sendContent = json.encode({i = index, msgPartsCount = dataPartsCount, content = dataContent})
-      local sendContent = string.gsub(sendContent, '\\"', '|')
-      sendContent = string.gsub(sendContent, '"', '\\"')
+      local sendContent = customEncode({i = index, msgPartsCount = dataPartsCount, content = dataContent})
       MSG:queueMessage(channel, sendContent)
       index = index + 1
     end
 	end,
   
   confirmReceive = function(self,channel)
-    emitter.send(channel,'DUR-vehicle-received')
+    debugPrint('Vehicle-received broadcast sending...')
+    emitter.broadcast('DUR-vehicle-received')
   end
 }
 
@@ -476,7 +476,44 @@ function setTrackWaypoints(trackKey, trackJson)
   -- Sets the JSON as waypoints for the location
   db.setStringValue(trackKey, trackJson)
 end
+-- character table string
+local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 
+-- encoding
+function enc(data)
+    return ((data:gsub('.', function(x) 
+        local r,b='',x:byte()
+        for i=8,1,-1 do r=r..(b%2^i-b%2^(i-1)>0 and '1' or '0') end
+        return r;
+    end)..'0000'):gsub('%d%d%d?%d?%d?%d?', function(x)
+        if (#x < 6) then return '' end
+        local c=0
+        for i=1,6 do c=c+(x:sub(i,i)=='1' and 2^(6-i) or 0) end
+        return b:sub(c+1,c+1)
+    end)..({ '', '==', '=' })[#data%3+1])
+end
+
+-- decoding
+function dec(data)
+    data = string.gsub(data, '[^'..b..'=]', '')
+    return (data:gsub('.', function(x)
+        if (x == '=') then return '' end
+        local r,f='',(b:find(x)-1)
+        for i=6,1,-1 do r=r..(f%2^i-f%2^(i-1)>0 and '1' or '0') end
+        return r;
+    end):gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
+        if (#x ~= 8) then return '' end
+        local c=0
+        for i=1,8 do c=c+(x:sub(i,i)=='1' and 2^(8-i) or 0) end
+        return string.char(c)
+    end))
+end
+
+function customEncode(data)
+  local encodedData = enc(json.encode(data))
+  debugPrint('Base64: '..tostring(encodedData))
+  return encodedData
+end
 -- Emit final times
 function sendFinalTimes()
   -- JSON encode the logged times and emit them to the stadium
@@ -487,9 +524,8 @@ function sendFinalTimes()
     racer = masterId
   }
   
-  local timeData = json.encode(times)
-  timeData = string.gsub(timeData, '\\"', '|')
-  timeData = string.gsub(timeData, '"', '\\"')
+  local timeData = customEncode(times)
+  
   MSG:queueMessage(raceEventName..'-finish',timeData)
 end
 
@@ -517,7 +553,7 @@ end
 
 -- save broadcasted track
 function saveBroadcastedTrack(str)
-  local track = json.decode(str)
+  local track = json.decode(dec(str))
   if track == nil or type(track) ~= 'table' then
     errorPrint('Received track data is not valid. Restart board to retry.')
   else
@@ -901,9 +937,7 @@ function onStart()
     -- emit racer online if we have a race ID
     if raceEventName ~= "" then
       local startData = {raceEventName = raceEventName, racer = masterId}
-      startData = json.encode(startData)
-      startData = string.gsub(startData, '\\"', '|')
-      startData = string.gsub(startData, '"', '\\"')
+      startData = customEncode(startData)
       MSG:queueMessage(raceEventName ..'-register', startData)
     end
     gState = 'awaiting'

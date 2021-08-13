@@ -1,3 +1,5 @@
+
+
 --DU RACING v1.0 created by rexsilex, NinjaFox and cAIRLs
 
 -- Screen receiver system and stats display
@@ -18,6 +20,44 @@ masterId = unit.getMasterPlayerId()
 -- Do not adjust version
 version = '1.0'
 
+-- character table string
+local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+
+-- encoding
+function enc(data)
+    return ((data:gsub('.', function(x) 
+        local r,b='',x:byte()
+        for i=8,1,-1 do r=r..(b%2^i-b%2^(i-1)>0 and '1' or '0') end
+        return r;
+    end)..'0000'):gsub('%d%d%d?%d?%d?%d?', function(x)
+        if (#x < 6) then return '' end
+        local c=0
+        for i=1,6 do c=c+(x:sub(i,i)=='1' and 2^(6-i) or 0) end
+        return b:sub(c+1,c+1)
+    end)..({ '', '==', '=' })[#data%3+1])
+end
+
+-- decoding
+function dec(data)
+    data = string.gsub(data, '[^'..b..'=]', '')
+    return (data:gsub('.', function(x)
+        if (x == '=') then return '' end
+        local r,f='',(b:find(x)-1)
+        for i=6,1,-1 do r=r..(f%2^i-f%2^(i-1)>0 and '1' or '0') end
+        return r;
+    end):gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
+        if (#x ~= 8) then return '' end
+        local c=0
+        for i=1,8 do c=c+(x:sub(i,i)=='1' and 2^(8-i) or 0) end
+        return string.char(c)
+    end))
+end
+
+function customEncode(data)
+  local encodedData = enc(json.encode(data))
+  debugPrint('Base64 Encoded Data: '..tostring(encodedData))
+  return encodedData
+end
 -- Text controller
 function handleTextCommandInput(text)
   local commands = {
@@ -60,7 +100,7 @@ function handleTextCommandInput(text)
       raceDB.setStringValue(raceEventName, json.encode(race))
       -- start the race
       system.print('Race "'..raceEventName..'" started!')
-      emitter.send(raceEventName, 'start')
+      emitter.broadcast('start')
     end,
 
     endRace = function() -- Marks the race as complete, no more times will be accepted and the race is archived.
@@ -70,7 +110,7 @@ function handleTextCommandInput(text)
       end
       race["status"] = 'ended'
       raceDB.setStringValue(raceEventName, json.encode(race)) -- save the race data
-      emitter.send(raceEventName, 'end')
+      emitter.broadcast('end')
       system.print('Race "'..raceEventName..'" has ended. No further time submissions are taken.')
     end,
 
@@ -181,7 +221,7 @@ MSG = {
       -- end)
     -- for _, key in ipairs(sortedMessages) do
       --emitter.send(MSG.queue[key]['channel'], MSG.queue[key]['message'])
-      emitter.send(MSG.queue[1]['channel'], MSG.queue[1]['message'])
+      emitter.broadcast(MSG.queue[1]['message'])
       MSG.lastSendChannel = MSG.queue[1]['channel']
       --unqueueMessage(key)
     --end    
@@ -236,51 +276,17 @@ MSG = {
     local index = 1
     local dataParts, dataPartsCount = split(data, 250)
     for lineId, dataContent in ipairs(dataParts) do
-      local sendContent = json.encode({i = index, msgPartsCount = dataPartsCount, content = dataContent})
-      local sendContent = string.gsub(sendContent, '\\"', '|')
-      sendContent = string.gsub(sendContent, '"', '\\"')
+      local sendContent = customEncode({i = index, msgPartsCount = dataPartsCount, content = dataContent})
       MSG:queueMessage(channel, sendContent)
       index = index + 1
     end
 	end,
   
   confirmReceive = function(self,channel)
-    emitter.send(channel,'DUR-system-received')
+    emitter.broadcast('DUR-system-received')
   end
 }
 
---[[function consumeQueue()
-  local sortedMessages = getKeysSortedByValue(
-    messageQueue,
-    function(a, b)
-      return tonumber(tonumber(a["time"]) < tonumber(b["time"]))
-    end
-  )
-  for _, key in ipairs(sortedMessages) do
-    emitter.send(messageQueue[key]["channel"], messageQueue[key]["message"])
-    unqueueMessage(key)
-    break
-  end    
-end
-
-function queueMessage(channel, message)
-  if consumerStarted == false then
-    -- Message queue consumer
-    unit.setTimer("consumeQueue", 1)
-    consumerStarted = true
-  end
-  table.insert(messageQueue, { channel = channel, message = message, time = system.getTime()})
-end
-
-function unqueueMessage(key)
-  table.remove(messageQueue, key)
-  local count = 0
-  for _ in pairs(messageQueue) do count = count + 1 end
-  if count == 0 then 
-    unit.stopTimer("consumeQueue")
-    consumerStarted = false
-  end 
-end]]
 
 function getCompleteMessage()
   -- local sorted =
@@ -297,33 +303,6 @@ function getCompleteMessage()
   end
   return assembeledMessage
 end
-
---[[function split(str, maxLength)
-  local lines = {}
-  local partLength = math.ceil(str:len() / maxLength)
-  local len = partLength
-  local startNum = 1
-  local endNum = maxLength
-  while partLength > 0 do
-    table.insert(lines, string.sub(str, startNum, endNum))
-    startNum = startNum + maxLength
-    endNum = endNum + maxLength
-    partLength = partLength - 1
-  end
-  return {lines = lines, length = len}
-end
-
-function splitBroadcast(action, channel, message)
-  local index = 1
-  local parts = split(message, 350)
-  for _, line in ipairs(parts["lines"]) do
-  local jsonStr = json.encode({i = index, len = parts["length"], action = action, content = line})
-  local send = string.gsub(jsonStr, '\\"', "|")
-  send = string.gsub(send, '"', '\\"')
-  queueMessage(channel, send)
-  index = index + 1
-  end
-end]]
 
 function getKeysSortedByValue(tbl, sortFunction)
   local keys = {}
