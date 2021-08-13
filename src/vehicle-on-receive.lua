@@ -21,23 +21,12 @@ end
 if message ~= 'DUR-vehicle-received' then --we don't want to try act on our own confirmation
   if channel == MSG.lastSendChannel and message == 'DUR-system-received' then
     MSG:unqueueMessage()
-    
-  --elseif channel == MSG.lastReceived.channel and message == MSG.lastReceived.msg then
-  --  MSG:confirmReceive(channel)
 
   elseif channel == masterId .. "-splitmsg" then
     MSG:confirmReceive(channel)
     local assembeledMessage = splitMsgAssembly(message)
     if assembeledMessage then
-      --[[if part["action"] == "save-track" then
-        saveBroadcastedTrack(fullMessage)
-      end]]
-      --if part["action"] == "register-save-track" then
-        saveBroadcastedTrack(assembeledMessage)
-        --if registered then
-        --  registerConfirm()
-        --end
-      --end
+      saveBroadcastedTrack(assembeledMessage)
     else
       return false
     end
