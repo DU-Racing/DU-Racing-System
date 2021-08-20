@@ -2,23 +2,23 @@
 
 utils = require('cpml/utils')
 
--- Exposed params
-raceEventName = "Enter Event name" --export: This should be set to match the raceEventName used on the central system (keep the "")
+-- Params
+raceEventName = "TestRex" --export: This should be set to match the raceEventName used on the central system (keep the "")
 
 orgMode = false --export: If checked you can create new tracks and broadcast them to a central system
 
-testRace = false --export: If checked this will allow you to test a track that is saved 
-testTrackName = "Enter Track Name" --export: Active track name, only used for test races (keep the "")
+testRace = true --export: If checked this will allow you to test a track that is saved 
+testTrackName = "TESTERA" --export: Active track name, only used for test races (keep the "")
 
-teamName = "Your team name here" --export: The name of the team you are racing for
+teamName = "Your team name here" --export: The name of the team racing for
 teamColorRed = 255 --export: Change the vehicle light color - red 0-255
 teamColorGreen = 255 --export: Change the vehicle light color - green 0-255
 teamColorBlue = 205 --export: Change the vehicle light color - blue 0-255
 
 -- Globals
-myDebug = false --true for getting debug Printouts
+myDebug = true --true for getting debug Printouts
 waypoints = {}
-radius = 20 -- Default radius. Can be changed and get's saved for every individual waypoint
+radius = 20 -- default radius used when none set on track
 sectionTimes = {} -- stores the times for each section
 savedWaypoints = {} -- stores the waypoints when an organiser is plotting a race
 currentWaypointIndex = 0 -- keeps track of the current active waypoint index
@@ -54,8 +54,7 @@ function handleTextCommandInput(text)
       system.print('-==:: DU Racing Command Help ::==-')
       system.print('"start" or {ALT+1} - When in test mode starts the test race with the set track.')
       system.print('"addWaypoint" or {ALT+2} - When in organizer mode, adds the current core position to the track waypoints.')
-      system.print('"setRadius(radius)" - Changes the waypoint radius forward on for in organizer mode new created waypoints.')
-      system.print('"saveTrack(track name, lap count)" - When in organizer mode, saves the created waypoints with the given track name and lap count to the local databank.')
+      system.print('"saveTrack(track name, lap count, waypoint radius)" - When in organizer mode, saves the created waypoints with the given track name, lap count and waypoint radius to the local databank.')
       system.print('"broadcastTrack(track name)" - When in organizer mode, broadcasts the prior saved track to a central system.')
       system.print('"listTracks" - Lists all track keys saved in the local, connected databank.')
     end,
@@ -88,27 +87,34 @@ function handleTextCommandInput(text)
         system.print('No tracks saved on this Databank.')
       end
     end,
-    saveTrack = function(trackNameLapCount)
-      local trackName, lapCount
-      local paramSeperation = string.find(trackNameLapCount,',')
+    saveTrack = function(trackNameLapCountWaypointRadius)
+      local trackName, lapCount, waypointRadius
+      local paramSeperation = string.find(trackNameLapCountWaypointRadius,',')
       if paramSeperation then
-        trackName = string.sub(trackNameLapCount,1,paramSeperation - 1)
-        lapCount = tonumber(string.sub(trackNameLapCount,paramSeperation + 1,#trackNameLapCount))
-        lapCount = type(lapCount) == 'number' and math.ceil(lapCount) or false
+        trackName = string.sub(trackNameLapCountWaypointRadius,1,paramSeperation - 1)
+        local LapCountWaypointRadius = string.sub(trackNameLapCountWaypointRadius,paramSeperation + 1,#trackNameLapCountWaypointRadius)
+        paramSeperation = string.find(LapCountWaypointRadius,',')
+        if paramSeperation then
+          lapCount = tonumber(string.sub(LapCountWaypointRadius,1,paramSeperation - 1))
+          lapCount = type(lapCount) == 'number' and math.ceil(lapCount) or false
+          waypointRadius = tonumber(string.sub(LapCountWaypointRadius,paramSeperation + 1,#LapCountWaypointRadius))
+          waypointRadius = type(waypointRadius) == 'number' and waypointRadius or false
+        end
       end
       
       local err = ''
       if not savedWaypoints[1] then err = 'No waypoints created that could be saved for a track. ' end
       if not trackName or trackName=='' then err = err..'A track can not be saved without a name. ' end
       if not lapCount or not (lapCount > 0) then err = err..'Lap Count must be an integer greater zero. ' end
+      if not waypointRadius or not (waypointRadius > 0) then err = err..'Waypoint radius must be a number greater zero.' end
       if err ~= '' then
         errorPrint(err)
       else
         -- Exports current saved waypoints to JSON
-        local track = {name = trackName, laps = lapCount, waypoints = savedWaypoints}
+        local track = {name = trackName, radius = waypointRadius, laps = lapCount, waypoints = savedWaypoints}
         db.setStringValue(trackName, json.encode(track))
         system.print([[The track has been saved to the local databank. 
-        Change to test mode to take a test drive. 
+        Change to test mode to try it out. 
         Type "broadcastTrack(trackName)" to save the track to a closeby, active central system.]])
       end
     end,
@@ -132,21 +138,13 @@ function handleTextCommandInput(text)
       if trackName ~= '' then
         local track = db.getStringValue(trackName)
         if not track then
-          errorPrint('No track with this name is saved on the databank. If you just recorded the track, save it using "saveTrack(track name, lap count)" first.')
+          errorPrint('No track with this name is saved on the databank. If you just recorded the track, save it using "saveTrack(track name, lap count, waypoint radius)" first.')
         else
           MSG:send('fdu-centralsplit', track) --saves track
           system.print('Track "'..trackName..'" has been broadcasted to the central system.')
         end
       else
         errorPrint('A track name must be used to broadcast a track.')
-      end
-    end,
-    setRadius = function(newRadius)
-      if type(radius)~=number then
-        errorPrint('Radius must be a number.')
-      else
-        radius = utils.round(newRadius,.1)
-        system.print('Radius set to: '..radius..' m.')
       end
     end
   }
@@ -232,7 +230,7 @@ function nextWaypoint()
     myPrint('Waypoint complete.', true)
   end --Preventing instant "Waypoint complete" Message to override start sequence
   currentWaypointIndex = currentWaypointIndex + 1
-  local nextPoint = waypoints[currentWaypointIndex]
+  nextPoint = waypoints[currentWaypointIndex]
   
   if not nextPoint then -- no more waypoints?
     table.insert(lapTimes, utils.round(now - lapTime,.001))
@@ -251,18 +249,15 @@ function nextWaypoint()
       --updateTime()
       endRace()
     else
-      -- reset lap start
-      lapTime = now
-      -- reset the waypoints for next lap
-      currentWaypointIndex = 1
-      nextPoint = waypoints[1]
+
+    -- reset lap start
+    lapTime = now
+    -- reset the waypoints for next lap
+    currentWaypointIndex = 1
+    nextPoint = waypoints[1]
     end
   end
-  if raceStarted then
-    currentWaypoint = vec3(nextPoint[1], nextPoint[2], nextPoint[3])
-    radius = nextPoint[4]
-    system.print('WAYPOINT: '..radius..' m.') --for now, definitely needs visualization.
-  end
+  if raceStarted then currentWaypoint = vec3(nextPoint[1], nextPoint[2], nextPoint[3]) end
   updateOverlayDesired = true
 end
 
@@ -284,7 +279,10 @@ function startRace()
     raceStarted = true
     raceStartCooldownIndicator = true
     unit.setTimer('raceStartCooldown',2)
-    --first waypoint set at start of countdown
+    --[[ set first waypoint moved to start of countdown
+    currentWaypointIndex = 1
+    currentWaypoint = vec3(waypoints[1][1], waypoints[1][2], waypoints[1][3])
+    system.setWaypoint(xyzPosition(currentWaypoint.x, currentWaypoint.y, currentWaypoint.z))]]
 
     -- set start time and first split time
     startTime = system.getTime()
@@ -386,10 +384,29 @@ MSG = {
   end,
   
   consumeQueue = function()
-    MSG.lastSendChannel = MSG.queue[1]['channel']
-    emitter.send(MSG.queue[1]['channel'], MSG.queue[1]['message'])
+    -- local sortedMessages = getKeysSortedByValue(
+      -- MSG.queue,
+      -- function(a, b)
+        -- return a['time'] < b['time']
+      -- end)
+    -- for _, key in ipairs(sortedMessages) do
+      --emitter.send(MSG.queue[key]['channel'], MSG.queue[key]['message'])
+      MSG.lastSendChannel = MSG.queue[1]['channel']
+      emitter.broadcast(MSG.queue[1]['channel']..'@'..MSG.queue[1]['message'])
+      --unqueueMessage(key)
+    --end    
   end,
-
+  
+  -- unqueueMessage = function(key)
+    -- table.remove(MSG.queue, key)
+    -- local count = 0
+    -- for _ in pairs(MSG.queue) do count = count + 1 end
+    -- if count == 0 then 
+      -- unit.stopTimer('consumeMsgQueue')
+      -- consumerStarted = false
+    -- end
+  -- end,
+  
   unqueueMessage = function()
     local queueCount = GNR:countTableEntries(MSG.queue)
     if queueCount == 0 then
@@ -431,15 +448,15 @@ MSG = {
     local dataParts, dataPartsCount = split(data, 250)
     for lineId, dataContent in ipairs(dataParts) do
       local sendContent = json.encode({i = index, msgPartsCount = dataPartsCount, content = dataContent})
-      local sendContent = string.gsub(sendContent, '\\"', '|')
-      sendContent = string.gsub(sendContent, '"', '\\"')
+      sendContent = string.gsub(sendContent, '\"', '"')
+      sendContent = string.gsub(sendContent, '\\', '|')
       MSG:queueMessage(channel, sendContent)
       index = index + 1
     end
 	end,
   
   confirmReceive = function(self,channel)
-    emitter.send(channel,'DUR-vehicle-received')
+    MSG:queueMessage(channel,'DUR-vehicle-received')
   end
 }
 
@@ -498,21 +515,12 @@ end
 -- Save waypoint
 function saveWaypoint()
   -- Saves the current position as a waypoint
+  table.insert(savedWaypoints, core.getConstructWorldPos())
 
-  local waypointPos = core.getConstructWorldPos() --used to shorten the length of world pos for saving. Racing doesn't need precision down to mm.
-  waypointPos = {
-    utils.round(waypointPos[1],.1),
-    utils.round(waypointPos[2],.1),
-    utils.round(waypointPos[3],.1),
-    radius
-    }
-  
-  table.insert(savedWaypoints, waypointPos)
-  
-  if myDebug then -- Output to lua console for debug
-    local pos = 'Waypoint set: '..waypointPos[1]..', '..waypointPos[2]..', '..waypointPos[3]..', '..radius
-    system.print(pos)
-  end
+  -- Output to lua console for debug
+	local pos = core.getConstructWorldPos()
+  local curr = xyzPosition(pos[1], pos[2], pos[3])
+  system.print(curr)
 end
 
 -- save broadcasted track
@@ -546,7 +554,11 @@ function loadTrack(name)
       remainingLaps = track['laps']
       totalLaps = remainingLaps
       waypoints = track['waypoints']
-    
+      if track['radius'] ~= nil then
+        radius = track['radius']
+      end
+
+      
       if not waypoints then
         errorPrint('Could not load track. No track waypoints found.')
         return false
@@ -891,7 +903,7 @@ function onStart()
     myPrint('-==:: DU Racing Organiser Mode ::==-', false)
     myPrint([[To create a new track type "addWaypoint" in the lua console or press "ALT+2" to save the current location as a new waypoint.
     The first waypoint should be at the start area, last at the finish line.
-    Type "saveTrack(track name, lap count)" to save the track local and optional "broadcastTrack(track name)" afterwards to add it to the central system.]]
+    Type "saveTrack(track name, lap count, waypoint radius)" to save the track local and optional "broadcastTrack(track name)" afterwards to add it to the central system.]]
     ,false)
     gData.mainMessage = ''
     toast('Entering Organizer Mode')
@@ -962,3 +974,5 @@ function myPrint(msg, doToast)
 end
 
 onStart()
+
+
