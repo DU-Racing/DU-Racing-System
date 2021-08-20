@@ -1,7 +1,13 @@
-if myDebug then system.print('Vehicle received: "'..message..'" on channel: "'..channel..'"') end
+if myDebug then system.print('Vehicle received: "'..message..'"') end
+local seperation = string.find(message,'@')
+
+if seperation then
+
+  local channel = string.sub(message,1,seperation-1)
+  local message = string.gsub(message,seperation+1,#message)
 
 local function splitMsgAssembly(msgPart)
-  mess = string.gsub(msgPart, "|", '\\"')
+  mess = string.gsub(msgPart, "|", '\\')
   local part = json.decode(mess)
   if part == nil then
     system.print("Invalid message: " .. mess)
@@ -21,12 +27,23 @@ end
 if message ~= 'DUR-vehicle-received' then --we don't want to try act on our own confirmation
   if channel == MSG.lastSendChannel and message == 'DUR-system-received' then
     MSG:unqueueMessage()
+    
+  --elseif channel == MSG.lastReceived.channel and message == MSG.lastReceived.msg then
+  --  MSG:confirmReceive(channel)
 
   elseif channel == masterId .. "-splitmsg" then
     MSG:confirmReceive(channel)
     local assembeledMessage = splitMsgAssembly(message)
     if assembeledMessage then
-      saveBroadcastedTrack(assembeledMessage)
+      --[[if part["action"] == "save-track" then
+        saveBroadcastedTrack(fullMessage)
+      end]]
+      --if part["action"] == "register-save-track" then
+        saveBroadcastedTrack(assembeledMessage)
+        --if registered then
+        --  registerConfirm()
+        --end
+      --end
     else
       return false
     end
@@ -43,4 +60,6 @@ if message ~= 'DUR-vehicle-received' then --we don't want to try act on our own 
   end
 
   MSG.lastReceived = {channel=channel,msg=message}
+end
+
 end
