@@ -12,7 +12,7 @@ activeTrack = nil
 trackName = 'No track set.' -- Set from the databank when looking up track key
 messageParts = {}
 consumerStarted = false
-myDebug = false
+myDebug = true
 masterId = unit.getMasterPlayerId()
 
 -- Do not adjust version
@@ -60,7 +60,7 @@ function handleTextCommandInput(text)
       raceDB.setStringValue(raceEventName, json.encode(race))
       -- start the race
       system.print('Race "'..raceEventName..'" started!')
-      emitter.send(raceEventName, 'start')
+      MSG:queueMessage(raceEventName,'start')
     end,
 
     endRace = function() -- Marks the race as complete, no more times will be accepted and the race is archived.
@@ -70,7 +70,7 @@ function handleTextCommandInput(text)
       end
       race["status"] = 'ended'
       raceDB.setStringValue(raceEventName, json.encode(race)) -- save the race data
-      emitter.send(raceEventName, 'end')
+      MSG:queueMessage(raceEventName,'end')
       system.print('Race "'..raceEventName..'" has ended. No further time submissions are taken.')
     end,
 
@@ -181,7 +181,7 @@ MSG = {
       -- end)
     -- for _, key in ipairs(sortedMessages) do
       --emitter.send(MSG.queue[key]['channel'], MSG.queue[key]['message'])
-      emitter.send(MSG.queue[1]['channel'], MSG.queue[1]['message'])
+      emitter.broadcast(MSG.queue[1]['channel']..'@'..MSG.queue[1]['message'])
       MSG.lastSendChannel = MSG.queue[1]['channel']
       --unqueueMessage(key)
     --end    
@@ -237,15 +237,15 @@ MSG = {
     local dataParts, dataPartsCount = split(data, 250)
     for lineId, dataContent in ipairs(dataParts) do
       local sendContent = json.encode({i = index, msgPartsCount = dataPartsCount, content = dataContent})
-      local sendContent = string.gsub(sendContent, '\\"', '|')
-      sendContent = string.gsub(sendContent, '"', '\\"')
+      sendContent = string.gsub(sendContent, '\"', '"')
+      sendContent = string.gsub(sendContent, '\\', '|')
       MSG:queueMessage(channel, sendContent)
       index = index + 1
     end
 	end,
   
   confirmReceive = function(self,channel)
-    emitter.send(channel,'DUR-system-received')
+    MSG:queueMessage(channel,'DUR-system-received')
   end
 }
 
@@ -628,3 +628,5 @@ function onStart()
 end
 
 onStart()
+
+
