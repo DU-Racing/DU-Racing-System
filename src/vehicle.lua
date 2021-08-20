@@ -377,7 +377,7 @@ MSG = {
     if myDebug then system.print('Vehicle added to queue: '..json.encode(MSG.queue)) end
     if consumerStarted == false then
       consumerStarted = true
-      MSG:consumeQueue() --we can send the first msg instantly.
+      --MSG:consumeQueue() --we can send the first msg instantly.
       consumerStartDesired = true
       if myDebug then system.print('Vehicle consumer started.') end
     end
@@ -387,7 +387,6 @@ MSG = {
     MSG.lastSendChannel = MSG.queue[1]['channel']
     debugPrint('Broadcasting message'..MSG.queue[1]['message'])
     emitter.broadcast(MSG.queue[1]['channel']..'@'..MSG.queue[1]['message'])
-    emitter.broadcast(MSG.queue[1]['message'])
   end,
   
   -- unqueueMessage = function(key)
