@@ -1,5 +1,3 @@
-
-
 --DU RACING v1.0 created by rexsilex, NinjaFox and cAIRLs
 
 -- Screen receiver system and stats display
@@ -7,6 +5,12 @@
 -- Params
 
 -- Race ID (Sets the active race ID used to receive and store stats, auto in future
+
+function debugPrint(msg)
+  if(myDebug) then
+    system.print(msg)
+  end
+end
 
 raceEventName = raceDB.getStringValue('activeRaceID') or 'No event set.'
 trackKey = raceDB.getStringValue('activeTrackID')
@@ -449,7 +453,7 @@ end
 function registerRacer(registerJSON)
   -- Adds the playerId to the active race
   -- emits the track data
-  local data = json.decode(registerJSON)
+  local data = json.decode(dec(registerJSON))
   local race = getRace(data["raceEventName"])
   if race == nil then
     return false
@@ -607,5 +611,6 @@ function onStart()
 end
 
 onStart()
+
 
 

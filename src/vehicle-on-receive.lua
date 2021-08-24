@@ -31,12 +31,22 @@ function dec(data)
     end))
 end
 
+function mysplit (inputstr, sep)
+  if sep == nil then
+          sep = '%s'
+  end
+  local t={}
+  for str in string.gmatch(inputstr, '([^'..sep..']+)') do
+          table.insert(t, str)
+  end
+  return t
+end
+
+split  = mysplit(message, '\\@')
+channel = split[1]
+message = split[2]
+
 if myDebug then system.print('Vehicle received: "'..message..'" on channel: "'..channel..'"') end
-
-if seperation then
-
-  local channel = string.sub(message,1,seperation-1)
-  local message = string.gsub(message,seperation+1,#message)
 
 local function splitMsgAssembly(msgPart)
   --mess = string.gsub(msgPart, "|", '\\"')
@@ -92,6 +102,4 @@ if message ~= 'DUR-vehicle-received' then --we don't want to try act on our own 
   end
 
   MSG.lastReceived = {channel=channel,msg=message}
-end
-
 end

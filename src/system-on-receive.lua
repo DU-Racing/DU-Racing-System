@@ -41,6 +41,20 @@ function dec(data)
     end))
 end
 
+function mysplit (inputstr, sep)
+        if sep == nil then
+                sep = '%s'
+        end
+        local t={}
+        for str in string.gmatch(inputstr, '([^'..sep..']+)') do
+                table.insert(t, str)
+        end
+        return t
+end
+
+split  = mysplit(message, '\\@')
+channel = split[1]
+message = split[2]
 
 if myDebug then system.print('System received: "'..message..'" on channel: "'..channel..'"') end
 
@@ -56,7 +70,7 @@ if message ~= 'DUR-system-received' then --we don't want to try act on our own c
 
     local part = json.decode(dec(message))
     if part == nil then
-      system.print("Invalid message: " .. message)
+      system.print("Invalid message: " .. dec(message))
       return false
     end
     table.insert(messageParts, {index = part["i"], content = part["content"]})
@@ -85,3 +99,4 @@ if message ~= 'DUR-system-received' then --we don't want to try act on our own c
 
   MSG.lastReceived = {channel=channel,msg=message}
 end
+

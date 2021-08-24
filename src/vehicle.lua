@@ -3,11 +3,11 @@
 utils = require('cpml/utils')
 
 -- Params
-raceEventName = "TestRex" --export: This should be set to match the raceEventName used on the central system (keep the "")
+raceEventName = "TEST" --export: This should be set to match the raceEventName used on the central system (keep the "")
 
 orgMode = false --export: If checked you can create new tracks and broadcast them to a central system
 
-testRace = true --export: If checked this will allow you to test a track that is saved 
+testRace = false --export: If checked this will allow you to test a track that is saved 
 testTrackName = "TESTERA" --export: Active track name, only used for test races (keep the "")
 
 teamName = "Your team name here" --export: The name of the team racing for
@@ -112,7 +112,7 @@ function handleTextCommandInput(text)
       else
         -- Exports current saved waypoints to JSON
         local track = {name = trackName, radius = waypointRadius, laps = lapCount, waypoints = savedWaypoints}
-        db.setStringValue(trackName, json.encode(track))
+        db.setStringValue(trackName, enc(json.encode(track)))
         system.print([[The track has been saved to the local databank. 
         Change to test mode to try it out. 
         Type "broadcastTrack(trackName)" to save the track to a closeby, active central system.]])
@@ -577,7 +577,7 @@ function loadTrack(name)
     local track = db.getStringValue(name)
     if track ~= nil and track ~= '' then
       -- Sets the number of laps for this track
-      track = json.decode(track)
+      track = json.decode(dec(track))
       remainingLaps = track['laps']
       totalLaps = remainingLaps
       waypoints = track['waypoints']
@@ -999,5 +999,6 @@ function myPrint(msg, doToast)
 end
 
 onStart()
+
 
 
