@@ -217,6 +217,12 @@ MSG = {
     end
   end,
   
+  getQueueCount = function()
+    local count = 0
+    for _ in pairs(MSG.queue) do count = count+1 end
+    return count
+  end,
+
   consumeQueue = function()
     -- local sortedMessages = getKeysSortedByValue(
       -- MSG.queue,
@@ -227,7 +233,7 @@ MSG = {
       --emitter.send(MSG.queue[key]['channel'], MSG.queue[key]['message'])
       emitter.broadcast(MSG.queue[1]['channel']..'@'..MSG.queue[1]['message'])
       MSG.lastSendChannel = MSG.queue[1]['channel']
-      --unqueueMessage(key)
+      MSG.unqueueMessage(key)
     --end    
   end,
   
@@ -484,6 +490,8 @@ function registerRacer(registerJSON)
 
   -- Emit the track data here, it allows a reset of the board to refetch the data on vehicle
   local trackJSON = json.encode(activeTrack)
+  
+   Print('Sending track JSON: '..trackJSON)
   MSG:send(data["racer"] .. "-splitmsg", trackJSON) --registers and saves track
 end
 
@@ -589,7 +597,9 @@ function onStart()
 
   if trackKey ~= nil and trackKey ~= '' then
     local trackJson = trackDB.getStringValue(trackKey)
-    activeTrack = json.decode(trackJson)
+    debugPrint(trackJson)
+    activeTrack = json.decode(dec(trackJson))
+    debugPrint('Active track data: '..tostring(activeTrack))
     trackName = activeTrack["name"]
   else 
     startError = 'No active track has been set, type "setTrack(Track name here)" to set a track. '
@@ -611,6 +621,7 @@ function onStart()
 end
 
 onStart()
+
 
 
 

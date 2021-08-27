@@ -385,7 +385,7 @@ MSG = {
   
   consumeQueue = function()
     MSG.lastSendChannel = MSG.queue[1]['channel']
-    debugPrint('Broadcasting message'..MSG.queue[1]['message'])
+    debugPrint('Broadcasting message: '..MSG.queue[1]['message']..' on channel '..MSG.queue[1]['channel'])
     emitter.broadcast(MSG.queue[1]['channel']..'@'..MSG.queue[1]['message'])
   end,
   
@@ -404,15 +404,15 @@ MSG = {
     if queueCount == 0 then
       unit.stopTimer('consumeMsgQueue')
       consumerStarted = false
-      if myDebug then system.print('Vehicle queue stopped. No more entries.') end
+      debugPrint('Vehicle queue stopped. No more entries.') 
     else
-      if myDebug then system.print('Vehicle unqueued: '..json.encode(MSG.queue[1])) end
+      debugPrint('Vehicle unqueued: '..json.encode(MSG.queue[1])) 
       table.remove(MSG.queue, 1)
-      if myDebug then system.print('Vehicle remaining queue: '..json.encode(MSG.queue)) end
+      debugPrint('Vehicle remaining queue: '..json.encode(MSG.queue))
       if GNR:countTableEntries(MSG.queue) == 0 then
         unit.stopTimer('consumeMsgQueue')
         consumerStarted = false
-        if myDebug then system.print('Vehicle queue stopped. No more entries after removal.') end
+        debugPrint('Vehicle queue stopped. No more entries after removal.') 
       end
     end
   end,
@@ -552,11 +552,13 @@ end
 
 -- save broadcasted track
 function saveBroadcastedTrack(str)
-  local track = json.decode(dec(str))
+  debugPrint('Attempting to save this: '..str)
+  local track = json.decode(str)
   if track == nil or type(track) ~= 'table' then
     errorPrint('Received track data is not valid. Restart board to retry.')
   else
     db.setStringValue(track['name'], str)
+    debugPrint('Saved track to db.')
     loadTrack(track['name'])
     myPrint('Track: "'..track['name']..'" has been loaded.')
     registerConfirm()
@@ -577,7 +579,7 @@ function loadTrack(name)
     local track = db.getStringValue(name)
     if track ~= nil and track ~= '' then
       -- Sets the number of laps for this track
-      track = json.decode(dec(track))
+      track = json.decode(track)
       remainingLaps = track['laps']
       totalLaps = remainingLaps
       waypoints = track['waypoints']

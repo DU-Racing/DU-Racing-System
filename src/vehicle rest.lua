@@ -56,6 +56,7 @@ if updateWaypointDesired then
 end
 if consumerStartDesired then
   unit.setTimer('consumeMsgQueue', 1)
+  debugPrint('Starting consumeMsgQueue')
   consumerStartDesired = false
 end
 

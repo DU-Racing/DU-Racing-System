@@ -60,6 +60,7 @@ if myDebug then system.print('System received: "'..message..'" on channel: "'..c
 
 if message ~= 'DUR-system-received' then --we don't want to try act on our own confirmation
   if channel == MSG.lastSendChannel and message == 'DUR-vehicle-received' then
+    debugPrint('System. Unqueue message, it was received.  Remaining in queue: '..tostring(MSG.getQueueCount()))
     MSG:unqueueMessage()
     
   --elseif channel == MSG.lastReceived.channel and message == MSG.lastReceived.msg then
