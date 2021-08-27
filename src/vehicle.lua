@@ -579,7 +579,7 @@ function loadTrack(name)
     local track = db.getStringValue(name)
     if track ~= nil and track ~= '' then
       -- Sets the number of laps for this track
-      track = json.decode(track)
+      track = json.decode(dec(track))
       remainingLaps = track['laps']
       totalLaps = remainingLaps
       waypoints = track['waypoints']
