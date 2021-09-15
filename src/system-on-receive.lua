@@ -6,7 +6,7 @@
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --WITH LATEST CHANGES THE CHANNEL ISN'T DYNAMIC!  WE MUST PASS THAT INFO VIA JSON OBJ
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+local myDebug = true
 
 
 function mysplit (inputstr, sep)

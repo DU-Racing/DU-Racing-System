@@ -7,8 +7,8 @@ raceEventName = "TEST" --export: This should be set to match the raceEventName u
 
 orgMode = false --export: If checked you can create new tracks and broadcast them to a central system
 
-testRace = false --export: If checked this will allow you to test a track that is saved 
-testTrackName = "TESTERA" --export: Active track name, only used for test races (keep the "")
+testRace = true --export: If checked this will allow you to test a track that is saved 
+testTrackName = "TESTERD" --export: Active track name, only used for test races (keep the "")
 
 teamName = "Your team name here" --export: The name of the team racing for
 teamColorRed = 255 --export: Change the vehicle light color - red 0-255
@@ -112,7 +112,7 @@ function handleTextCommandInput(text)
       else
         -- Exports current saved waypoints to JSON
         local track = {name = trackName, radius = waypointRadius, laps = lapCount, waypoints = savedWaypoints}
-        db.setStringValue(trackName, nc(json.encode(track))
+        db.setStringValue(trackName, json.encode(track))
         system.print([[The track has been saved to the local databank. 
         Change to test mode to try it out. 
         Type "broadcastTrack(trackName)" to save the track to a closeby, active central system.]])
@@ -487,9 +487,11 @@ end
 
 function customEncode(data)
   local encodedData = json.encode(data)
-  debugPrint('Base64: '..tostring(encodedData))
+  debugPrint('JSON Encoded: '..tostring(encodedData))
   return encodedData
 end
+
+
 -- Emit final times
 function sendFinalTimes()
   -- JSON encode the logged times and emit them to the stadium
@@ -959,7 +961,7 @@ end
 
 function debugPrint(msg)
   if(myDebug) then
-    system.print(msg)
+    system.print('Vehicle--  '..msg)
   end
 end
 

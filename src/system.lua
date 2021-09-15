@@ -5,10 +5,12 @@
 -- Params
 
 -- Race ID (Sets the active race ID used to receive and store stats, auto in future
+local myDebug = true
+
 
 function debugPrint(msg)
   if(myDebug) then
-    system.print(msg)
+    system.print('System--  '..msg)
   end
 end
 
@@ -26,7 +28,7 @@ version = '1.0'
 
 function customEncode(data)
   local encodedData = json.encode(data)
-  debugPrint('Base64 Encoded Data: '..tostring(encodedData))
+  debugPrint('JSON Encoded Data: '..tostring(encodedData))
   return encodedData
 end
 -- Text controller
@@ -562,12 +564,17 @@ function onStart()
   system.print('Active Track: ' .. trackKey)
   system.print('Type "help" to get a list of commands.')
 
+
   if trackKey ~= nil and trackKey ~= '' then
     local trackJson = trackDB.getStringValue(trackKey)
     debugPrint(trackJson)
     activeTrack = json.decode(trackJson)
     debugPrint('Active track data: '..tostring(activeTrack))
-    trackName = activeTrack["name"]
+    if activeTrack ~= nil then
+      trackName = activeTrack["name"]
+    else
+      system.print("Track name not loaded due to error, see next output.")
+    end 
   else 
     startError = 'No active track has been set, type "setTrack(Track name here)" to set a track. '
   end
