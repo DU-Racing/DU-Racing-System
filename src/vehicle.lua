@@ -382,11 +382,14 @@ MSG = {
       if myDebug then system.print('Vehicle consumer started.') end
     end
   end,
-  
+  customSend = function(msg)
+    msg = string.gsub(msg,'\\"','|')
+    emitter.broadcast(msg)
+  end,
   consumeQueue = function()
     MSG.lastSendChannel = MSG.queue[1]['channel']
     debugPrint('Broadcasting message: '..MSG.queue[1]['message']..' on channel '..MSG.queue[1]['channel'])
-    emitter.broadcast(MSG.queue[1]['channel']..'@'..MSG.queue[1]['message'])
+    MSG.customSend(MSG.queue[1]['channel']..'@'..MSG.queue[1]['message'])
   end,
   
   -- unqueueMessage = function(key)
@@ -437,7 +440,7 @@ MSG = {
     end
 
     local index = 1
-    local dataParts, dataPartsCount = split(data, 250)
+    local dataParts, dataPartsCount = split(data, 150)
     for lineId, dataContent in ipairs(dataParts) do
       local sendContent = customEncode({i = index, msgPartsCount = dataPartsCount, content = dataContent})
       MSG:queueMessage(channel, sendContent)

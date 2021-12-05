@@ -191,7 +191,9 @@ MSG = {
     for _ in pairs(MSG.queue) do count = count+1 end
     return count
   end,
-
+  customSend = function(msg)
+    emitter.broadcast(msg:gsub('\\"','|'))    
+  end,
   consumeQueue = function()
     -- local sortedMessages = getKeysSortedByValue(
       -- MSG.queue,
@@ -200,7 +202,7 @@ MSG = {
       -- end)
     -- for _, key in ipairs(sortedMessages) do
       --emitter.send(MSG.queue[key]['channel'], MSG.queue[key]['message'])
-      emitter.broadcast(MSG.queue[1]['channel']..'@'..MSG.queue[1]['message'])
+      MSG.customSend(MSG.queue[1]['channel']..'@'..MSG.queue[1]['message'])
       MSG.lastSendChannel = MSG.queue[1]['channel']
       MSG.unqueueMessage(key)
     --end    
@@ -244,16 +246,15 @@ MSG = {
       local startPos = 1
       local endPos = maxLength
       while remainingSplitsCount > 0 do
-        table.insert(splitParts, string.sub(str, startPos, endPos))
-        startPos = endPos + 1
+        table.insert(splitParts, string.sub(str, startPos, endPos))w
         endPos = endPos + maxLength > strLength and strLength or endPos + maxLength
-        remainingSplitsCount = remainingSplitsCount - 1
+        remainingSplitsCount = remainingSplitsCount - 1ww
       end
       return splitParts, splitCount
     end
 
     local index = 1
-    local dataParts, dataPartsCount = split(data, 250)
+    local dataParts, dataPartsCount = split(data, 150)
     for lineId, dataContent in ipairs(dataParts) do
       local sendContent = customEncode({i = index, msgPartsCount = dataPartsCount, content = dataContent})
       MSG:queueMessage(channel, sendContent)

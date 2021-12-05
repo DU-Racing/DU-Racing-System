@@ -1,7 +1,7 @@
 -- character table string
 local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 
-
+message = message:gsub('|', '\\"')
 
 
 function mysplit (inputstr, sep)

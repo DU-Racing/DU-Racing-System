@@ -8,6 +8,7 @@
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 local myDebug = true
 
+message = message:gsub('|', '\\"')
 
 function mysplit (inputstr, sep)
         if sep == nil then
@@ -36,8 +37,8 @@ if message ~= 'DUR-system-received' then --we don't want to try act on our own c
 
   elseif channel == "fdu-centralsplit" then
     MSG:confirmReceive(channel)
-
-    local part = json.decode(message)
+    debugPrint('Before decode'..message)
+    local part = json.decode(message) --decode the full wrapper
     if part == nil then
       system.print("Invalid message: " .. message)
       return false
