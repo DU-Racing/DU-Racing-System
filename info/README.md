@@ -4,6 +4,7 @@ Welcome to DU Racing! Here you can find existing tracks that use our race system
 ## Tracks
 ### Wonderland Raceway
 **VR: Wonderland Racetrack**
+*Operated by Wicked Wonderland*
 
 #### Wonderland (Fully Voxeled Bike Course)
 ::pos{0,2,41.5112,78.0519,71.7278}
@@ -15,6 +16,7 @@ Welcome to DU Racing! Here you can find existing tracks that use our race system
 **Best 23 (During Official Race)**: *37:27.526* Lark
 
 #### Wondersky (Aero Race)
+//TODO
 
 #### Wonderair (Special Biplane Race)
 ::pos{0,2,41.3680,78.0897,71.8600}
@@ -23,7 +25,22 @@ Welcome to DU Racing! Here you can find existing tracks that use our race system
 
 > In the works here: Giant Oval! Submarine Races!
 
+### Icedale 
+// TODO
 
+### Aurora Raceway
+
+### Dome
+// TODO
+
+### PVR
+// TODO
+
+### PINT
+// TODO
+
+### Orbidity's Boats
+// TODO
 
 
 ## Databanks providers
@@ -73,6 +90,14 @@ Some tracks provide free ships but those that don't you'll need to either buy th
         - Pocket League (Anything pocketable)
         - Gryphon
         - Vesperion
+
+#### Leagues
+    - Formula DU
+        - Requires Herckqun bikes and only races on fully voxeled tracks.
+    - Pocketable Challenges
+        - Requires the ship be pocketable. 
+    - Hybrids
+        - Spec being developed.  Current prototype is Vesperion.
 
 ## Recurring Events
 
