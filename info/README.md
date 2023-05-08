@@ -5,6 +5,7 @@ Welcome to DU Racing! Here you can find existing tracks that use our race system
 ### Wonderland Raceway
 *Operated by Wicked Wonderland and lead by Vylqun, Sharkey, Vanherck and Lark*  
 **VR: Wonderland Racetrack**  
+> ::pos{0,2,41.5112,78.0519,71.7278}
 
 This wonderful race complex was the first of its kind after release and features all the amenities you could imagine.  From fully voxeled tracks, ovals, pit lanes to aero races, and and expanding collection of more and more it is a must see location on the DU Racing circuit. 
 
@@ -23,13 +24,14 @@ This wonderful race complex was the first of its kind after release and features
 | Wonderland | Best 3 | 4:32.269 | Lark |
 | Wonderland | Best 23 | 37:27.526 | Lark |
 
-### 
-
+### The Oval 
+// TODO 
 
 ### Icedale 
-**VR: **
+// TODO 
 
 ### Aurora Raceway
+// TODO
 
 ### Dome
 // TODO
@@ -47,52 +49,45 @@ This wonderful race complex was the first of its kind after release and features
 ---
 
 ## Databanks providers
-> IMPORTANT: Currently these offerings are a work in progress! Check back soon for complete databanks late Spring '23.
+> IMPORTANT NOTICE: Currently these offerings are a work in progress! Check back soon for complete databanks late Spring '23.
 
 Some tracks provide free ships but those that don't you'll need to either buy the appropriate ship (which by BP or token will included the needed databank info) or install the race script on an appropriate vehicle.  Acquire them from one of these locations or from someone on the discord.  Databank BPs can come on a XS core with Programming board and sometimes a screen with info about their contents.
 > Tip: Copy databanks with this script: [DB Duplicator on github](https://github.com/asc2030/du-duplicate-databank)
 
 ### Tyr Shop (by the Dome)
 **VR: Tyr Dome Shop**  
-*DU Racing Section*
+*DU Racing Section*    
+These are also available on the flying dome and DU Racing Axe when visiting events. (TODO ADD VR)
 
-###### Databanks BPs
-    | Item | Price | Tracks | 
-    |------|-------|--------------|
-    | Hover (Bikes) | 1M | 
-    - Test 
-    - Test 2
-    | 
-    | Aero | 1M | 
-    - One
-    - Two
-    - Three
-    | 
-    
+###### Primary Databanks BPs
+    | Item | Price | Tracks | Support Locations |
+    |------|-------|--------|-------------------|
+    | Hover (Bikes) | 1M | 6 | Wonderland, Icedale, Aurora, PINT |
+    | Aero | 1M | 5 | Wonderland, Dome, Icedale |
+    | Hybrid | 1M | 10 | TBD | 
 
-###### Vehicles with Databank Preinstalled
-    - Race Gryphon 
-
-##### Axe Mobile Store
-    - Aero Database **1M**
+###### Vehicles for Sale with Databank Preinstalled
+    - Race Gryphon, Aero DB.
 
 ### Wonderland Racetrack
-**VR: Wonderland Racetrack**
-*Pit Lane: Race Parts Store*
-::pos{0,2,41.4307,78.0018,71.8883}
+**VR: Wonderland Racetrack**  
+*Pit Lane: Race Parts Store*  
+> ::pos{0,2,41.4307,78.0018,71.8883}
 
-###### Vehicles with Databank Preinstalled
-    - Herckqun Bike 
+###### Vehicles for Sale with Databank Preinstalled
+    - Herckqun Bike, Hover DB.
         - Rare Token **3M**
         - Basic Token **1M**
         - BP **1M**
 
 > Parts for Sale: You can get parts for the bikes here for when you wreck!
-> Free databanks available from DU Racing: Contact someone on the discord.
+
+---
 
 ### Additional Info
 
-#### Vehicle Shortlist
+> Free databanks available from DU Racing: Contact someone on the discord.
+#### Favorite Vehicle Shortlist
     - Bikes
         - Herckqun
         - Ezekiel (Retired) 
@@ -102,7 +97,10 @@ Some tracks provide free ships but those that don't you'll need to either buy th
     - Flying
         - Pocket League (Anything pocketable)
         - Gryphon
+        - Sparrow XS
+    - Hybrid
         - Vesperion
+        - Sparrow XSpace
 
 #### Leagues
     - Formula DU
@@ -112,7 +110,7 @@ Some tracks provide free ships but those that don't you'll need to either buy th
     - Hoverclass 
         - Default Speeder Lua (adjust parameters allowed) and no high elevation lift. 
     - Hybrids
-        - Spec being developed.  Current prototype is Vesperion.
+        - Various specs under development.  Current prototype is Vesperion.
 
 ## Recurring Events
 
