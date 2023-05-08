@@ -49,6 +49,7 @@ This wonderful race complex was the first of its kind after release and features
 ---
 
 ## Databanks providers
+> **Warning** 
 > IMPORTANT NOTICE: Currently these offerings are a work in progress! Check back soon for complete databanks late Spring '23.
 
 Some tracks provide free ships but those that don't you'll need to either buy the appropriate ship (which by BP or token will included the needed databank info) or install the race script on an appropriate vehicle.  Acquire them from one of these locations or from someone on the discord.  Databank BPs can come on a XS core with Programming board and sometimes a screen with info about their contents.
@@ -60,14 +61,14 @@ Some tracks provide free ships but those that don't you'll need to either buy th
 These are also available on the flying dome and DU Racing Axe when visiting events. (TODO ADD VR)
 
 ###### Primary Databanks BPs
-    | Item | Price | Tracks | Support Locations |
-    |------|-------|--------|-------------------|
-    | Hover (Bikes) | 1M | 6 | Wonderland, Icedale, Aurora, PINT |
-    | Aero | 1M | 5 | Wonderland, Dome, Icedale |
-    | Hybrid | 1M | 10 | TBD | 
+| Item | Price | Tracks | Support Locations |
+|------|-------|--------|-------------------|
+| Hover (Bikes) | 1M | 6 | Wonderland, Icedale, Aurora, PINT |
+| Aero | 1M | 5 | Wonderland, Dome, Icedale |
+| Hybrid | 1M | 10 | TBD | 
 
 ###### Vehicles for Sale with Databank Preinstalled
-    - Race Gryphon, Aero DB.
+    - Race Gryphon, Aero DB, 10M
 
 ### Wonderland Racetrack
 **VR: Wonderland Racetrack**  
@@ -76,9 +77,9 @@ These are also available on the flying dome and DU Racing Axe when visiting even
 
 ###### Vehicles for Sale with Databank Preinstalled
     - Herckqun Bike, Hover DB.
-        - Rare Token **3M**
-        - Basic Token **1M**
-        - BP **1M**
+        - Rare Token, 3M
+        - Basic Token, 1M
+        - BP, 1M
 
 > Parts for Sale: You can get parts for the bikes here for when you wreck!
 
