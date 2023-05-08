@@ -1,37 +1,33 @@
 # DU Racing Locations
 Welcome to DU Racing! Here you can find existing tracks that use our race system. It is grouped by location and includes info on where to find vehicles, which ones the track is designed for and where you can get databanks and a wealth of other info for racing ind Dual Universe.
 
-## Tracks
+## Race Host Locations and Complexes
 ### Wonderland Raceway
 *Operated by Wicked Wonderland and lead by Vylqun, Sharkey, Vanherck and Lark*  
-
-
 **VR: Wonderland Racetrack**  
+
 This wonderful race complex was the first of its kind after release and features all the amenities you could imagine.  From fully voxeled tracks, ovals, pit lanes to aero races, and and expanding collection of more and more it is a must see location on the DU Racing circuit. 
 
-### Tracks
-| Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | 
-|----------|-----|--------|-----------|--------|-----------|----------------------|
-| Wonderland | ::pos{0,2,41.5112,78.0519,71.7278} | 3.2km | 33 | 20m | 3-23 | Herckqun Bikes, Hoverclass | 
-| Wondersky | ::pos{} | ??? | ??? | 80m | 3 | Gryphon, Pocketable League | 
-| Wonderair | ::pos{} | ??? | ??? | ??? | 3 | Biplane, Gryphon, Pocketable League | 
-| Wonderoval | ::pos{} | ??? | ??? | ??? | 3-100 | Herckqun Bikes, Hoverclass |
-| Wondersea | ??? | ??? | ??? | ??? | ? | Under Construction: Submarines | 
 
-> In the works here: Giant Oval! Submarine Races!
+#### Tracks
+| Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
+|----------|-----|--------|-----------|--------|-----------|----------------------|----|
+| Wonderland | ::pos{0,2,41.5112,78.0519,71.7278} | 3.2km | 33 | 20m | 3-23 | Herckqun Bikes, Hoverclass | Hover | 
+| Wondersky | ::pos{} | ??? | ??? | 80m | 3 | Gryphon, Pocketable League | Aero  |
+| Wonderair | ::pos{} | ??? | ??? | ??? | 3 | Biplane, Gryphon, Pocketable League | Special | 
 
-### Records
+#### Records
 | Track ID | Record | Time | Holder |
 |----------|--------|------|--------|
 | Wonderland | Best Lap | 1:29.293 | Lark |
 | Wonderland | Best 3 | 4:32.269 | Lark |
 | Wonderland | Best 23 | 37:27.526 | Lark |
 
-
+### 
 
 
 ### Icedale 
-// TODO
+**VR: **
 
 ### Aurora Raceway
 
@@ -51,23 +47,33 @@ This wonderful race complex was the first of its kind after release and features
 ---
 
 ## Databanks providers
+> IMPORTANT: Currently these offerings are a work in progress! Check back soon for complete databanks late Spring '23.
+
 Some tracks provide free ships but those that don't you'll need to either buy the appropriate ship (which by BP or token will included the needed databank info) or install the race script on an appropriate vehicle.  Acquire them from one of these locations or from someone on the discord.  Databank BPs can come on a XS core with Programming board and sometimes a screen with info about their contents.
 > Tip: Copy databanks with this script: [DB Duplicator on github](https://github.com/asc2030/du-duplicate-databank)
 
 ### Tyr Shop (by the Dome)
-**VR: Tyr Dome Shop**
+**VR: Tyr Dome Shop**  
 *DU Racing Section*
 
-
 ###### Databanks BPs
-    - Space Races
-    - Aero Database (AKA Airrace)  **1M**
-    - Formula DU (Bikes) Databank  **1M**
+    | Item | Price | Tracks | 
+    |------|-------|--------------|
+    | Hover (Bikes) | 1M | 
+    - Test 
+    - Test 2
+    | 
+    | Aero | 1M | 
+    - One
+    - Two
+    - Three
+    | 
+    
 
 ###### Vehicles with Databank Preinstalled
-    - Race Gryphon **10M**
+    - Race Gryphon 
 
-#### Axe Mobile Store
+##### Axe Mobile Store
     - Aero Database **1M**
 
 ### Wonderland Racetrack
