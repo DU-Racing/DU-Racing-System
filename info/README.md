@@ -49,7 +49,7 @@ This wonderful race complex was the first of its kind after release and features
 ---
 
 ## Databanks providers
-> **Warning** 
+> **Warning**  
 > IMPORTANT NOTICE: Currently these offerings are a work in progress! Check back soon for complete databanks late Spring '23.
 
 Some tracks provide free ships but those that don't you'll need to either buy the appropriate ship (which by BP or token will included the needed databank info) or install the race script on an appropriate vehicle.  Acquire them from one of these locations or from someone on the discord.  Databank BPs can come on a XS core with Programming board and sometimes a screen with info about their contents.
@@ -68,7 +68,8 @@ These are also available on the flying dome and DU Racing Axe when visiting even
 | Hybrid | 1M | 10 | TBD | 
 
 ###### Vehicles for Sale with Databank Preinstalled
-    - Race Gryphon, Aero DB, 10M
+- Race Gryphon, Aero DB, 10M
+- Vesperion, Hybrid DB, 5M
 
 ### Wonderland Racetrack
 **VR: Wonderland Racetrack**  
@@ -76,10 +77,10 @@ These are also available on the flying dome and DU Racing Axe when visiting even
 > ::pos{0,2,41.4307,78.0018,71.8883}
 
 ###### Vehicles for Sale with Databank Preinstalled
-    - Herckqun Bike, Hover DB.
-        - Rare Token, 3M
-        - Basic Token, 1M
-        - BP, 1M
+- Herckqun Bike, Hover DB.
+    - Rare Token, 3M
+    - Basic Token, 1M
+    - BP, 1M
 
 > Parts for Sale: You can get parts for the bikes here for when you wreck!
 
