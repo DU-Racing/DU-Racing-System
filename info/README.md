@@ -3,27 +3,32 @@ Welcome to DU Racing! Here you can find existing tracks that use our race system
 
 ## Tracks
 ### Wonderland Raceway
-**VR: Wonderland Racetrack**
-*Operated by Wicked Wonderland*
+*Operated by Wicked Wonderland and lead by Vylqun, Sharkey, Vanherck and Lark*  
 
-#### Wonderland (Fully Voxeled Bike Course)
-::pos{0,2,41.5112,78.0519,71.7278}
-"Wonderland" as Lua ID.
-~3.2km long. 33 waypoints. 20m radius waypoints. Any number of laps.
-##### Track Records
-**Best Lap**: *1:29.293* Lark
-**Best 3**: *4:32.269* Lark
-**Best 23 (During Official Race)**: *37:27.526* Lark
 
-#### Wondersky (Aero Race)
-//TODO
+**VR: Wonderland Racetrack**  
+This wonderful race complex was the first of its kind after release and features all the amenities you could imagine.  From fully voxeled tracks, ovals, pit lanes to aero races, and and expanding collection of more and more it is a must see location on the DU Racing circuit. 
 
-#### Wonderair (Special Biplane Race)
-::pos{0,2,41.3680,78.0897,71.8600}
-"Wonderair" as Lua ID. (Unique Databank)
-3 laps, 11 Waypoints, casual and easy fun.  Made for biplanes.
+### Tracks
+| Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | 
+|----------|-----|--------|-----------|--------|-----------|----------------------|
+| Wonderland | ::pos{0,2,41.5112,78.0519,71.7278} | 3.2km | 33 | 20m | 3-23 | Herckqun Bikes, Hoverclass | 
+| Wondersky | ::pos{} | ??? | ??? | 80m | 3 | Gryphon, Pocketable League | 
+| Wonderair | ::pos{} | ??? | ??? | ??? | 3 | Biplane, Gryphon, Pocketable League | 
+| Wonderoval | ::pos{} | ??? | ??? | ??? | 3-100 | Herckqun Bikes, Hoverclass |
+| Wondersea | ??? | ??? | ??? | ??? | ? | Under Construction: Submarines | 
 
 > In the works here: Giant Oval! Submarine Races!
+
+### Records
+| Track ID | Record | Time | Holder |
+|----------|--------|------|--------|
+| Wonderland | Best Lap | 1:29.293 | Lark |
+| Wonderland | Best 3 | 4:32.269 | Lark |
+| Wonderland | Best 23 | 37:27.526 | Lark |
+
+
+
 
 ### Icedale 
 // TODO
@@ -42,6 +47,8 @@ Welcome to DU Racing! Here you can find existing tracks that use our race system
 ### Orbidity's Boats
 // TODO
 
+
+---
 
 ## Databanks providers
 Some tracks provide free ships but those that don't you'll need to either buy the appropriate ship (which by BP or token will included the needed databank info) or install the race script on an appropriate vehicle.  Acquire them from one of these locations or from someone on the discord.  Databank BPs can come on a XS core with Programming board and sometimes a screen with info about their contents.
@@ -95,7 +102,9 @@ Some tracks provide free ships but those that don't you'll need to either buy th
     - Formula DU
         - Requires Herckqun bikes and only races on fully voxeled tracks.
     - Pocketable Challenges
-        - Requires the ship be pocketable. 
+        - Requires the ship be pocketable. Located at many main race centers.
+    - Hoverclass 
+        - Default Speeder Lua (adjust parameters allowed) and no high elevation lift. 
     - Hybrids
         - Spec being developed.  Current prototype is Vesperion.
 
