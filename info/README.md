@@ -15,16 +15,16 @@ This wonderful race complex was the first of its kind after release and features
 |----------|-----|--------|-----------|--------|-----------|----------------------|----|
 | Wonderland | ::pos{0,2,41.5112,78.0519,71.7278} | 3.2km | 33 | 20m | 3-23 | Herckqun Bikes, Hoverclass | Hover | 
 | Wondersky | ::pos{} | ??? | ??? | 80m | 3 | Gryphon, Pocketable League | Aero  |
-| Wonderair | ::pos{} | ??? | ??? | ??? | 3 | Biplane, Gryphon, Pocketable League | Special | 
+| Wonderair | ::pos{} | ??? | ??? | ??? | 3 | Biplane, Gryphon, Pocketable League | Aero | 
 
 #### Records
 | Track ID | Record | Time | Holder |
-|----------|--------|------|--------|
+|----------|--------|-----:|--------|
 | Wonderland | Best Lap | 1:29.293 | Lark |
 | Wonderland | Best 3 | 4:32.269 | Lark |
 | Wonderland | Best 23 | 37:27.526 | Lark |
 
-### The Oval 
+### Sharktooth Raceway
 // TODO 
 
 ### Icedale 
@@ -34,17 +34,36 @@ This wonderful race complex was the first of its kind after release and features
 // TODO
 
 ### Dome
-// TODO
+
 
 ### PVR
 // TODO
 
 ### PINT
-// TODO
+*Operated by Collateral Damage and lead by Jarus_Phalanx*  
+**VR: TBD**  
+> ::pos{0,2,35.5212,106.6998,-0.6410}
 
-### Orbidity's Boats
-// TODO
+The classic is back again!  This bike course is built over water with a number of gates in a fast paced but approachable track.  Come glide above the waves in a hoverbike and dodge through the gates as fast as you can.  Near M6 and the Dome this one is sure to be a favorite.
 
+#### Tracks
+> **Warning**
+> Track Incomplete.  Coming soon.
+| Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
+|----------|-----|--------|-----------|--------|-----------|----------------------|----|
+| PINT | ::pos{0,2,41.5112,78.0519,71.7278} | ??? | ??? | 20m | 3 | Herckqun Bikes, Hoverclass | Hover | 
+
+
+### DUTCH ISLAND HYRDO CIRCUIT
+*Operated by DSG and lead by Orbidity*
+**VR: TBD**
+>::pos{0,2,-29.6533,-17.1049,9.4369}
+[DSG Hydro Circuit](assets.prod.novaquark.com/74927/608a8669-dcdf-49c2-ba23-cbb7b8d1d200.png)
+A super laid back course all the way around a huge island.  
+
+| Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
+|----------|-----|--------|-----------|--------|-----------|----------------------|----|
+| DUTCH ISLE | ::pos{0,2,41.5112,78.0519,71.7278} | >40km | 8 | ??? | 1 | Hydroplane, Boats | Boat | 
 
 ---
 
@@ -60,12 +79,15 @@ Some tracks provide free ships but those that don't you'll need to either buy th
 *DU Racing Section*    
 These are also available on the flying dome and DU Racing Axe when visiting events. (TODO ADD VR)
 
-###### Primary Databanks BPs
+###### Official Databanks (available in BPs)
 | Item | Price | Tracks | Support Locations |
 |------|-------|--------|-------------------|
 | Hover (Bikes) | 1M | 6 | Wonderland, Icedale, Aurora, PINT |
 | Aero | 1M | 5 | Wonderland, Dome, Icedale |
 | Hybrid | 1M | 10 | TBD | 
+| Boat | 1M | 3 | 
+> **Info**
+> Databanks available for free if you ask around nicely.  Inquire on the discord.
 
 ###### Vehicles for Sale with Databank Preinstalled
 - Race Gryphon, Aero DB, 10M
@@ -90,29 +112,35 @@ These are also available on the flying dome and DU Racing Axe when visiting even
 
 > Free databanks available from DU Racing: Contact someone on the discord.
 #### Favorite Vehicle Shortlist
-    - Bikes
-        - Herckqun
-        - Ezekiel (Retired) 
-    - Boats
-        - Hydroplanes
-        - Escobar
-    - Flying
-        - Pocket League (Anything pocketable)
-        - Gryphon
-        - Sparrow XS
-    - Hybrid
-        - Vesperion
-        - Sparrow XSpace
+- Bikes
+    - Herckqun
+    - Ezekiel (Retired) 
+- Boats
+    - Hydroplanes
+    - Escobar
+- Flying
+    - Pocket League (Anything pocketable)
+    - Gryphon
+    - Sparrow XS
+- Hybrid
+    - Vesperion
+    - Sparrow XSpace
 
 #### Leagues
-    - Formula DU
-        - Requires Herckqun bikes and only races on fully voxeled tracks.
-    - Pocketable Challenges
-        - Requires the ship be pocketable. Located at many main race centers.
-    - Hoverclass 
-        - Default Speeder Lua (adjust parameters allowed) and no high elevation lift. 
-    - Hybrids
-        - Various specs under development.  Current prototype is Vesperion.
+- Formula DU
+    - Requires Herckqun bikes and only races on fully voxeled tracks.
+- Pocketable Challenges
+    - Requires the ship be pocketable. Located at many main race centers.
+- Hoverclass 
+    - Default Speeder Lua (adjust parameters allowed)
+    - No high elevation lift. 
+    - Usable on most bike tracks too.
+- Hybrids
+    - Various specs under development.  Current prototype is Vesperion.
+
+#### Promotion Images
+- DU Racing Logo:
+- Spaceboys Challenge Poster:
 
 ## Recurring Events
 
