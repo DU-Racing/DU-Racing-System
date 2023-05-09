@@ -1,6 +1,6 @@
 # DU Racing Locations
 ![DURacing](https://assets.prod.novaquark.com/74927/fa9f3d62-6aff-41aa-9ee3-3665a1116c7a.png)
-Welcome to DU Racing! Here you can find existing tracks that use our race system. It is grouped by location and includes info on where to find vehicles, which ones the track is designed for and where you can get databanks and a wealth of other info for racing ind Dual Universe.
+Welcome to DU Racing! Here you can find existing tracks that use our race system. It is grouped by location and includes info on where to find vehicles, which ones the track is designed for and where you can get databanks and a wealth of other info for racing in Dual Universe.
 
 # Race Host Locations and Complexes
 ## Wonderland Raceway
@@ -30,7 +30,7 @@ This wonderful race complex was the first of its kind after release and features
 
 ## Sharktooth Speedway
 *Operated by Wicked Wonderland, lead by Sharkey*  
-**VR: Sharktooth Pit 1 **
+**VR: Sharktooth Pit 1**
 > ::pos{0,2,45.6489,75.1968,3.0182}
 
 See the spectacle of the Oval!  The immensity of this track is unparalleled!
@@ -133,7 +133,7 @@ The classic is back again!  This bike course is built over water with a number o
 **VR: TBD**
 >::pos{0,2,-29.6533,-17.1049,9.4369}
 
-![DSG Hydro Circuit](assets.prod.novaquark.com/74927/5fab1de0-392e-4616-863d-4f51fddae7cb.png)
+![DSG Hydro Circuit](https://assets.prod.novaquark.com/74927/5fab1de0-392e-4616-863d-4f51fddae7cb.png)
 
 A difficult course all the way around a huge island.  Have some fun in the sun.  Kick back and go really fast in the special hydroplane performance boats. 
 
@@ -153,7 +153,7 @@ A difficult course all the way around a huge island.  Have some fun in the sun. 
 ---
 
 
-# Databanks Providers
+# Databank Providers & Raceship Shops
 > **Warning**  
 > IMPORTANT NOTICE: Currently these offerings are a work in progress! Check back soon for complete databanks late Spring '23.
 
@@ -239,7 +239,14 @@ These are also available on the flying dome and DU Racing Axe when visiting even
 #### Radar Script
 > **Note**
 > This script is not open source or found on this github.
+
 Want a cool screen that shows where everyone is on your track? Contact rex to get it installed at your track.
+#####Features:
+- Timing Screen
+- Light system
+- Race start trigger system
+- Map with live positions of racers
+- Checks for laps to ensure honesty
 
 ## Recurring Events
 
