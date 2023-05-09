@@ -122,7 +122,10 @@ AngryDad's famous death dome has racing opportunities!  Can your rig handle the 
 **VR: Clat space bar**  
 > ::pos{0,0,-2090492.9068,-812033.7168,-1842431.9055}
 
-NO RULES. In pvp space, gankers welcome.  These death races are so much fun!  Come to race or come to shoot the racers.  Ships are provided and this track is generally only available during events so you don't need to worry about a DB.  The waypoints are subject to change. 10 two seater ships available.  
+NO RULES. In pvp space, gankers welcome.  These death races are so much fun!  Come to race or come to shoot the racers.  Ships are provided and this track is generally only available during events so you don't need to worry about a DB.  The waypoints are subject to change. 10 two seater ships available.
+
+> **Info** 
+> 500k buying to cover ship cost.   
 
 | Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
 |----------|-----|--------|-----------|--------|-----------|----------------------|----|
