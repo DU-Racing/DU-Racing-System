@@ -1,9 +1,9 @@
 # DU Racing Locations
-!(DURacing)[]
+![DURacing](https://assets.prod.novaquark.com/74927/fa9f3d62-6aff-41aa-9ee3-3665a1116c7a.png)
 Welcome to DU Racing! Here you can find existing tracks that use our race system. It is grouped by location and includes info on where to find vehicles, which ones the track is designed for and where you can get databanks and a wealth of other info for racing ind Dual Universe.
 
-## Race Host Locations and Complexes
-### Wonderland Raceway
+# Race Host Locations and Complexes
+## Wonderland Raceway
 *Operated by Wicked Wonderland and lead by Vylqun, Sharkey, Vanherck and Lark*  
 **VR: Wonderland Racetrack**  
 > ::pos{0,2,41.5112,78.0519,71.7278}
@@ -16,8 +16,8 @@ This wonderful race complex was the first of its kind after release and features
 | Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
 |----------|-----|--------|-----------|--------|-----------|----------------------|----|
 | Wonderland | ::pos{0,2,41.5112,78.0519,71.7278} | ~3.2km | 33 | 20m | 3-23 | Herckqun Bikes, Hoverclass | Hover | 
-| Wondersky | ::pos{0,2,41.3631,78.1710,96.5376} | Short | 7 | 100m | 3 | Gryphon, Pocketable League | Aero  |
-| Wonderair | ::pos{0,2,41.3343,78.0976,71.9304} | Short | 11 | 45m | 3 | Biplane, Gryphon, Pocketable League | Aero | 
+| Wondersky | ::pos{0,2,41.3631,78.1710,96.5376} | Short | 7 | 100m | 3 | Gryphon, Pocketables | Aero  |
+| Wonderair | ::pos{0,2,41.3343,78.0976,71.9304} | Short | 11 | 45m | 3 | Biplane, Gryphon, Pocketables League | Aero | 
 
 #### Records
 | Track ID | Record | Time | Holder |
@@ -26,17 +26,38 @@ This wonderful race complex was the first of its kind after release and features
 | Wonderland | Best 3 | 4:32.269 | Lark |
 | Wonderland | Best 23 | 37:27.526 | Lark |
 
-### Sharktooth Raceway
+---
+
+## Sharktooth Raceway
 // TODO 
 
-### Icedale 
+---
+
+## Icedale 
 // TODO 
 
-### Aurora Raceway
-// TODO
+---
 
-### Racing @ The Dome
-*Operated by Clat and Tyr. Lead by Rex*
+## Aurora Raceway
+*Operated by Argent Galactic, lead by Sindex*  
+**VR: Aurora Raceway**  
+> ::pos{0,2,79.4569,111.8082,67.2387}  
+
+This beautiful track lays in the artic snow and ice.  It's fully voxeled this complex is sure to inspire and amaze.  It's got pits and a ton of amentities including a shop too!  
+
+#### Tracks
+> **Info**  
+> Additional tracks are a work in progress. 
+| Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
+|----------|-----|--------|-----------|--------|-----------|----------------------|----|
+| Aurora | ::pos{0,2,79.4569,111.8082,67.2387}   | ??? | TBD | 20m | 3 | Herckqun Bikes, Hoverclass | Hover | 
+| Borealis | TBD   | ??? | TBD | 100m | 3 | Gryphon, Pocketables | Aero | 
+| Daybreak | TBD | TBD | TBD | 500m | 1 | Vesperion, Hybrids | Hybrid | 
+
+---
+
+## Racing @ The Dome
+*Operated by Clat and Tyr. Lead by Rex*  
 **VR: The Dome**
 > ::pos{0,2,35.6978,105.2356,2.1000}
 
@@ -51,16 +72,31 @@ AngryDad's famous death dome has racing opportunities!  Can your rig handle the 
 | Masterful | ::pos{0,2,35.6978,105.2356,2.1000} | ??? | 9 | 80m | 3 | Gryphon, Pocketables | Aero | 
 | DomeCourse | ::pos{0,2,36.1660,105.1884,8.2411} | ??? | 9 | 80m | 3 | Escobar, Boats | Boat | 
 | Drag Strip | ::pos{0,2,35.9479,105.1420,11.1480} | n/a | n/a | n/a | 1 | Drag Racer, Hoverclass | n/a | 
+> **Info**  
+> We are adding 3-5 hybrid races here soon.
 
 #### Records
 | Track ID | Record | Time | Holder |
 |----------|--------|-----:|--------|
 | Flyover | Best 3 Lap | 1:37.558 | Treble |
 
-### PVR
-// TODO
+---
 
-### PINT
+## PVR
+*Operated by PVR and lead by BootyBonsai*  
+**VR: PURE VELOCITY - NITRO CITY**
+> ::pos{0,2,39.4805,63.7177,176.0051}
+
+Nitro city is a masterpiece.  Many many buildings and amenities.  This is the best place for racing in a city.  There are streets to speed through and it's a ton of fun!
+
+| Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
+|----------|-----|--------|-----------|--------|-----------|----------------------|----|
+| PVR | ::pos{0,2,39.4929,63.6919,176.0015} | Short | ??? | 80m | 3 | Gryphon, Pocketables | Aero | 
+| ??? | ??? | Short | ??? | 20m | 3 | F1 Car, Hover | Hover |
+
+---
+
+## PINT
 *Operated by Collateral Damage and lead by Jarus_Phalanx*  
 **VR: TBD**  
 > ::pos{0,2,35.5212,106.6998,-0.6410}
@@ -75,8 +111,9 @@ The classic is back again!  This bike course is built over water with a number o
 |----------|-----|--------|-----------|--------|-----------|----------------------|----|
 | PINT | ::pos{0,2,41.5112,78.0519,71.7278} | ??? | ??? | 20m | 3 | Herckqun Bikes, Hoverclass | Hover | 
 
+---
 
-### DUTCH ISLAND HYRDO CIRCUIT
+## DUTCH ISLAND HYRDO CIRCUIT
 *Operated by DSG and lead by Orbidity*
 **VR: TBD**
 >::pos{0,2,-29.6533,-17.1049,9.4369}
@@ -91,7 +128,12 @@ A super laid back course all the way around a huge island.  Have some fun in the
 
 ---
 
-## Databanks providers
+---
+
+---
+
+
+# Databanks Providers
 > **Warning**  
 > IMPORTANT NOTICE: Currently these offerings are a work in progress! Check back soon for complete databanks late Spring '23.
 
@@ -132,13 +174,14 @@ These are also available on the flying dome and DU Racing Axe when visiting even
 
 ---
 
-### Additional Info
+# Additional Info
 
 > Free databanks available from DU Racing: Contact someone on the discord.
 #### Favorite Vehicle Shortlist
-- Bikes
+- Hover
     - Herckqun
     - Ezekiel (Retired) 
+    - F1 Car
 - Boats
     - Hydroplanes
     - Escobar
@@ -154,7 +197,7 @@ These are also available on the flying dome and DU Racing Axe when visiting even
 #### Leagues
 - Formula DU
     - Requires Herckqun bikes and only races on fully voxeled tracks.
-- Pocketable Challenges
+- Pocketables
     - Requires the ship be pocketable. Located at many main race centers.
 - Hoverclass 
     - Default Speeder Lua (adjust parameters allowed)
