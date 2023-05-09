@@ -28,8 +28,19 @@ This wonderful race complex was the first of its kind after release and features
 
 ---
 
-## Sharktooth Raceway
-// TODO 
+## Sharktooth Speedway
+*Operated by Wicked Wonderland, lead by Sharkey*  
+**VR: Sharktooth Pit 1 **
+> ::pos{0,2,45.6489,75.1968,3.0182}
+
+See the spectacle of the Oval!  The immensity of this track is unparalleled!
+
+| Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
+|----------|-----|--------|-----------|--------|-----------|----------------------|----|
+| GrandOval | ::pos{0,2,45.6929,75.2264,3.5684} | ~3.2km | 33 | 20m | 3-23 | Herckqun Bikes, Hoverclass | Hover | 
+| Infield |  ::pos{0,2,45.6929,75.2264,3.5684} | ??? | ??? | 40m | 3 | Herckqun Bikes, Indy Cars, Hoverclass | Hover |
+> **Note**  
+> Submarine races coming soon.
 
 ---
 
@@ -94,6 +105,7 @@ Nitro city is a masterpiece.  Many many buildings and amenities.  This is the be
 |----------|-----|--------|-----------|--------|-----------|----------------------|----|
 | PVR | ::pos{0,2,39.4929,63.6919,176.0015} | Short | ??? | 80m | 3 | Gryphon, Pocketables | Aero | 
 | ??? | ??? | Short | ??? | 20m | 3 | F1 Car, Hover | Hover |
+
 > **Note**  
 > We plan to expand and add Hybrid races here too. 
 
@@ -107,7 +119,7 @@ Nitro city is a masterpiece.  Many many buildings and amenities.  This is the be
 The classic is back again!  This bike course is built over water with a number of gates in a fast paced but approachable track.  Come glide above the waves in a hoverbike and dodge through the gates as fast as you can.  Near M6 and the Dome this one is sure to be a favorite.
 
 #### Tracks
-> **Warning**
+> **Warning**  
 > Track Incomplete.  Coming soon.
 
 | Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
@@ -121,13 +133,18 @@ The classic is back again!  This bike course is built over water with a number o
 **VR: TBD**
 >::pos{0,2,-29.6533,-17.1049,9.4369}
 
-![DSG Hydro Circuit](https://assets.prod.novaquark.com/74927/608a8669-dcdf-49c2-ba23-cbb7b8d1d200.png)
+![DSG Hydro Circuit](assets.prod.novaquark.com/74927/5fab1de0-392e-4616-863d-4f51fddae7cb.png)
 
-A super laid back course all the way around a huge island.  Have some fun in the sun.  Kick back and go really fast in the special hydroplane performance boats. 
+A difficult course all the way around a huge island.  Have some fun in the sun.  Kick back and go really fast in the special hydroplane performance boats. 
 
 | Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
 |----------|-----|--------|-----------|--------|-----------|----------------------|----|
-| DUTCH ISLE | ::pos{0,2,41.5112,78.0519,71.7278} | >40km | 8 | ??? | 1 | Hydroplane, Boats | Boat | 
+| DUTCH ISLE | ::pos{0,2,41.5112,78.0519,71.7278} | >40km | 8 | 100m | 1 | Hydroplane, Boats | Boat | 
+
+#### Records
+| Track ID | Record | Time | Holder |
+|----------|--------|-----:|--------|
+| DUTCH ISLE | Best Lap | 3:45.667 | Orbidity |
 
 ---
 
@@ -141,7 +158,7 @@ A super laid back course all the way around a huge island.  Have some fun in the
 > IMPORTANT NOTICE: Currently these offerings are a work in progress! Check back soon for complete databanks late Spring '23.
 
 Some tracks provide free ships but those that don't you'll need to either buy the appropriate ship (which by BP or token will included the needed databank info) or install the race script on an appropriate vehicle.  Acquire them from one of these locations or from someone on the discord.  Databank BPs can come on a XS core with Programming board and sometimes a screen with info about their contents.
-> Tip: Copy databanks with this script: [DB Duplicator on github](https://github.com/asc2030/du-duplicate-databank)
+> Tip: Copy (and merge0) databanks with this script: [DB Duplicator on github](https://github.com/asc2030/du-duplicate-databank)
 
 ### Tyr Shop (by the Dome)
 **VR: Tyr Dome Shop**  
@@ -218,6 +235,11 @@ These are also available on the flying dome and DU Racing Axe when visiting even
     - assets.prod.novaquark.com/100694/37f71083-7b2a-42cc-8728-44119d908ef2.png
     - assets.prod.novaquark.com/100694/532f4be0-287e-4717-aa1e-6d2120b825cc.png
 - Spaceboys Challenge Poster: assets.prod.novaquark.com/74927/7164b8fd-6fa0-4a97-bff5-a02e4163a233.png
+
+#### Radar Script
+> **Note**
+> This script is not open source or found on this github.
+Want a cool screen that shows where everyone is on your track? Contact rex to get it installed at your track.
 
 ## Recurring Events
 
