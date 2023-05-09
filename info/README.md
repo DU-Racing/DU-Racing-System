@@ -1,6 +1,8 @@
 # DU Racing Locations
 ![DURacing](https://assets.prod.novaquark.com/74927/fa9f3d62-6aff-41aa-9ee3-3665a1116c7a.png)
 Welcome to DU Racing! Here you can find existing tracks that use our race system. It is grouped by location and includes info on where to find vehicles, which ones the track is designed for and where you can get databanks and a wealth of other info for racing in Dual Universe.
+> **Warning**  
+> Some information Incomplete.  We are still working on creating some tracks, especially adding the Hybrid db and related tracks.  Please be patient.
 
 # Race Host Locations and Complexes
 ## Wonderland Raceway
@@ -18,6 +20,7 @@ This wonderful race complex was the first of its kind after release and features
 | Wonderland | ::pos{0,2,41.5112,78.0519,71.7278} | ~3.2km | 33 | 20m | 3-23 | Herckqun Bikes, Hoverclass | Hover | 
 | Wondersky | ::pos{0,2,41.3631,78.1710,96.5376} | Short | 7 | 100m | 3 | Gryphon, Pocketables | Aero  |
 | Wonderair | ::pos{0,2,41.3343,78.0976,71.9304} | Short | 11 | 45m | 3 | Biplane, Gryphon, Pocketables League | Aero | 
+| Wonderstar | ::pos{0,2,41.3343,78.0976,71.9304} | Long | TBD | 1km | 1 | 
 
 #### Records
 | Track ID | Record | Time | Holder |
@@ -44,8 +47,28 @@ See the spectacle of the Oval!  The immensity of this track is unparalleled!
 
 ---
 
-## Icedale 
-// TODO 
+## Icedale Racecenter
+*Operated by 
+**VR: Icedale Racecenter **  
+> ::pos{0,2,-84.5475,57.8226,67.8016}
+
+![IcedaleMap](https://assets.prod.novaquark.com/74927/cabaa534-268d-4d33-97e4-a440bd0ebdb2.png)
+Icedale is a continuation of amazing builds by Vylqun. It has so much to do!  Worth the trip every time!
+
+
+| Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
+|----------|-----|--------|-----------|--------|-----------|----------------------|----|
+| Icedale |  ::pos{0,2,-84.4974,58.1055,67.7497} | ~13km | 41 | 34m | 3 | Herckqun Bikes, Hoverclass | Hover | 
+| IcedaleMini |  ::pos{0,2,-84.4974,58.1055,67.7497} | ~13km | 18 | 36m | 3 | Herckqun Bikes, Hoverclass | Hover | 
+| IcedaleRally | ::pos{0,2,-84.4913,56.8881,67.4405} | ~13km | 21 | 20m | 3 | Herckqun Bikes, Hoverclass | Hover | 
+| Icedale | ::pos{0,2,-84.7573,59.7047,96.8960} | ~6km | 36 | 20m | 3 | Gryphon, Pocketables | Aero | 
+| Icedale Canyon | ::pos{0,2,-84.7573,59.7047,96.8960} | ??? | 15 | 100m | 1-Way | Gryphon, Pocketables | Aero |
+| Icedale Orbit | TBD | TBD | TBD | 500m | 1 | Vesperion, Valkyrie, BYO | Hybrid |
+| Icedale M6 | TBD | TBD | TBD | 250m | Turnaround | Vesperion, Valkyrie, BYO | Hybrid |
+
+> **Note**  
+> Stop by the store! - Scrap, Fuel, Elements, BPs, Tokens
+> ::pos{0,2,-84.3537,55.4073,69.7108}
 
 ---
 
@@ -109,6 +132,13 @@ Nitro city is a masterpiece.  Many many buildings and amenities.  This is the be
 > **Note**  
 > We plan to expand and add Hybrid races here too. 
 
+## Starwatch Naval Airbase
+*Operated by BootyBanzai*
+**TBD**  
+> TBD
+
+Coming soon.
+
 ---
 
 ## PINT
@@ -144,7 +174,7 @@ A difficult course all the way around a huge island.  Have some fun in the sun. 
 #### Records
 | Track ID | Record | Time | Holder |
 |----------|--------|-----:|--------|
-| DUTCH ISLE | Best Lap | 3:45.667 | Orbidity |
+| DUTCH ISLE | Best Lap | 3:42.801 | Orbidity |
 
 ---
 
@@ -212,6 +242,7 @@ These are also available on the flying dome and DU Racing Axe when visiting even
     - Biplane
 - Hybrid
     - Vesperion
+    - Valkyrie
     - Sparrow XSpace
 
 #### Leagues
@@ -228,7 +259,15 @@ These are also available on the flying dome and DU Racing Axe when visiting even
     - No high altitude lift. 
     - New luas may apply.
 - Hybrids
-    - Various specs under development.  Current prototype is Vesperion.
+    - Bantamweight:  XS Core, 35T weight limit fueled. [Vesperion] *Current Season's Weightclass
+    - Lightweight: XS Core, 55T weight limit fueled. [Valkyrie] *Some Tracks 
+    - Welterweight: S Core, Warp Drive Required, 250T weight limit fueled [TBD] *Coming Soon
+    - Middleweight: S Core, Warp Drive Required, 500T weight limit fueled [Rook] *Coming Soon
+    - Heavyweight: M Core, 1500kL container space, 1.5k weight limit fueled, [Basilisk] *Coming Soon
+    - Superheavyweight: L Core, Anything goes.  *Challenge someone to slips!
+
+- BYO 
+    - Bring your own.  Anything goes. Except don't cheat or exploit. 
 
 #### Promotion Images
 - DU Racing Logo:
