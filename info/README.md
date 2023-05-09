@@ -49,6 +49,7 @@ The classic is back again!  This bike course is built over water with a number o
 #### Tracks
 > **Warning**
 > Track Incomplete.  Coming soon.
+
 | Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
 |----------|-----|--------|-----------|--------|-----------|----------------------|----|
 | PINT | ::pos{0,2,41.5112,78.0519,71.7278} | ??? | ??? | 20m | 3 | Herckqun Bikes, Hoverclass | Hover | 
@@ -58,7 +59,7 @@ The classic is back again!  This bike course is built over water with a number o
 *Operated by DSG and lead by Orbidity*
 **VR: TBD**
 >::pos{0,2,-29.6533,-17.1049,9.4369}
-[DSG Hydro Circuit](assets.prod.novaquark.com/74927/608a8669-dcdf-49c2-ba23-cbb7b8d1d200.png)
+![DSG Hydro Circuit](assets.prod.novaquark.com/74927/608a8669-dcdf-49c2-ba23-cbb7b8d1d200.png)
 A super laid back course all the way around a huge island.  
 
 | Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
