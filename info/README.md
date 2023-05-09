@@ -48,7 +48,7 @@ See the spectacle of the Oval!  The immensity of this track is unparalleled!
 ---
 
 ## Icedale Racecenter
-*Operated by 
+*Operated by Vylqun*
 **VR: Icedale Racecenter **  
 > ::pos{0,2,-84.5475,57.8226,67.8016}
 
@@ -117,6 +117,22 @@ AngryDad's famous death dome has racing opportunities!  Can your rig handle the 
 
 ---
 
+## CLAT Spacebar - PVP Races
+*Operated by CLAT and lead by LeeFall*  
+**VR: Clat space bar**  
+> ::pos{0,0,-2090492.9068,-812033.7168,-1842431.9055}
+
+NO RULES. In pvp space, gankers welcome.  These death races are so much fun!  Come to race or come to shoot the racers.  Ships are provided and this track is generally only available during events so you don't need to worry about a DB.  The waypoints are subject to change. 10 two seater ships available.  
+
+| Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
+|----------|-----|--------|-----------|--------|-----------|----------------------|----|
+| Deathrace | ::pos{0,0,-2090492.9068,-812033.7168,-1842431.9055} | Long | ~13 | 15km | 2 | BYO | *Unique | 
+
+> **Warning**  
+> YOU WILL PROBABLY DIE.
+
+---
+
 ## PVR
 *Operated by PVR and lead by BootyBonsai*  
 **VR: PURE VELOCITY - NITRO CITY**
@@ -131,6 +147,8 @@ Nitro city is a masterpiece.  Many many buildings and amenities.  This is the be
 
 > **Note**  
 > We plan to expand and add Hybrid races here too. 
+
+---
 
 ## Starwatch Naval Airbase
 *Operated by BootyBanzai*
@@ -280,7 +298,7 @@ These are also available on the flying dome and DU Racing Axe when visiting even
 > This script is not open source or found on this github.
 
 Want a cool screen that shows where everyone is on your track? Contact rex to get it installed at your track.
-#####Features:
+**Features:**
 - Timing Screen
 - Light system
 - Race start trigger system
@@ -290,5 +308,10 @@ Want a cool screen that shows where everyone is on your track? Contact rex to ge
 ## Recurring Events
 
 - **Spaceboys Challenge**
-    - ![SBC](https://assets.prod.novaquark.com/74927/7164b8fd-6fa0-4a97-bff5-a02e4163a233.png)
-    Every last saturday of the month at Wonderland Raceway for a 23 lap endurance race.  Usually 23:00 UTC but check for current details.
+    - ![SBCPoster](https://assets.prod.novaquark.com/74927/7164b8fd-6fa0-4a97-bff5-a02e4163a233.png)
+    Every last saturday of the month at Wonderland Raceway for a 23 lap endurance race.  Usually 23:00 UTC but check for current details. 
+- **Death Race**
+    - ![DeathRacePoster](https://assets.prod.novaquark.com/65967/462adea7-0634-43e2-a6f5-087ac6643fdb.jpg)
+    First Saturday of every month.  23:00 UTC.  NO RULES!
+- **Friday Night Racing**
+    - ![FridayNightPoster](https://assets.prod.novaquark.com/74927/9c23bd7f-17df-4e10-a4d8-21f71f8233eb.png)
