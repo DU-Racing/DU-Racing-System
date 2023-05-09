@@ -93,6 +93,8 @@ Nitro city is a masterpiece.  Many many buildings and amenities.  This is the be
 |----------|-----|--------|-----------|--------|-----------|----------------------|----|
 | PVR | ::pos{0,2,39.4929,63.6919,176.0015} | Short | ??? | 80m | 3 | Gryphon, Pocketables | Aero | 
 | ??? | ??? | Short | ??? | 20m | 3 | F1 Car, Hover | Hover |
+> **Note**  
+> We plan to expand and add Hybrid races here too. 
 
 ---
 
