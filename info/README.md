@@ -46,7 +46,7 @@ This wonderful race complex was the first of its kind after release and features
 This beautiful track lays in the artic snow and ice.  It's fully voxeled this complex is sure to inspire and amaze.  It's got pits and a ton of amentities including a shop too!  
 
 #### Tracks
-> **Info**  
+> **Warning**  
 > Additional tracks are a work in progress. 
 | Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
 |----------|-----|--------|-----------|--------|-----------|----------------------|----|
@@ -72,7 +72,7 @@ AngryDad's famous death dome has racing opportunities!  Can your rig handle the 
 | Masterful | ::pos{0,2,35.6978,105.2356,2.1000} | ??? | 9 | 80m | 3 | Gryphon, Pocketables | Aero | 
 | DomeCourse | ::pos{0,2,36.1660,105.1884,8.2411} | ??? | 9 | 80m | 3 | Escobar, Boats | Boat | 
 | Drag Strip | ::pos{0,2,35.9479,105.1420,11.1480} | n/a | n/a | n/a | 1 | Drag Racer, Hoverclass | n/a | 
-> **Info**  
+> **Note**  
 > We are adding 3-5 hybrid races here soon.
 
 #### Records
@@ -152,7 +152,7 @@ These are also available on the flying dome and DU Racing Axe when visiting even
 | Aero | 1M | 5 | Wonderland, Dome, Icedale |
 | Hybrid | 1M | 10 | TBD | 
 | Boat | 1M | 3 | Dome, Dutch Island | 
-> **Info**
+> **Note**  
 > Databanks available for free if you ask around nicely.  Inquire on the discord.
 
 ###### Vehicles for Sale with Databank Preinstalled
@@ -169,7 +169,7 @@ These are also available on the flying dome and DU Racing Axe when visiting even
     - Rare Token, 3M
     - Basic Token, 1M
     - BP, 1M
-
+> **Note**  
 > Parts for Sale: You can get parts for the bikes here for when you wreck!
 
 ---
@@ -220,4 +220,4 @@ These are also available on the flying dome and DU Racing Axe when visiting even
 
 - **Spaceboys Challenge**
     - ![SBC](https://assets.prod.novaquark.com/74927/7164b8fd-6fa0-4a97-bff5-a02e4163a233.png)
-    - Every last saturday of the month at Wonderland Raceway for a 23 lap endurance race.  Usually 23:00 UTC but check for current details.
+    Every last saturday of the month at Wonderland Raceway for a 23 lap endurance race.  Usually 23:00 UTC but check for current details.
