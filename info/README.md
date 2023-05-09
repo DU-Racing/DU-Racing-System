@@ -48,6 +48,7 @@ This beautiful track lays in the artic snow and ice.  It's fully voxeled this co
 #### Tracks
 > **Warning**  
 > Additional tracks are a work in progress. 
+
 | Track ID | Pos | Length | Waypoints | Radius | Lap Count | Appropriate Vehicles | DB |
 |----------|-----|--------|-----------|--------|-----------|----------------------|----|
 | Aurora | ::pos{0,2,79.4569,111.8082,67.2387}   | ??? | TBD | 20m | 3 | Herckqun Bikes, Hoverclass | Hover | 
