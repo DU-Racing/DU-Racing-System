@@ -315,3 +315,4 @@ Want a cool screen that shows where everyone is on your track? Contact rex to ge
     First Saturday of every month.  23:00 UTC.  NO RULES!
 - **Friday Night Racing**
     - ![FridayNightPoster](https://assets.prod.novaquark.com/74927/9c23bd7f-17df-4e10-a4d8-21f71f8233eb.png)
+    Tune in at 8pm on twitch and AD is always down for some racing on Friday Nights.  Bring some booze. 
